@@ -4,6 +4,8 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import initDatabase from 'database/init.database';
 import logger from 'utils/logger';
+import router from 'routes';
+import { errorHandler, notFound } from 'middleware/errorHandler';
 const app = express();
 
 // INIT MIDDLEWARE
@@ -16,9 +18,13 @@ app.use(express.urlencoded({ extended: true }));
 initDatabase.connect();
 
 // ROUTES
-app.get('/', (req, res) => {
-  res.send('Welcome to the Auth Service!');
-});
+app.use('', router);
+
+// ERROR HANDLING
+app.use(notFound);
+// CATCH ALL UNHANDLED ERRORS
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
