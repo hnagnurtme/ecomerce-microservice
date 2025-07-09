@@ -24,6 +24,29 @@ services:
       - zookeeper
     networks:
       - microservices-network
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: shopify-ecommerce
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservices-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   # Application Services
   # api-gateway:
@@ -50,21 +73,30 @@ services:
   auth-service:
     build:
       context: ./auth-service
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=development
       - KAFKA_BROKERS=kafka:29092
-      - PORT=3001
+      - DEV_APP_PORT=3001
+      - HOST=mongodb
+      - DB_PORT=27017
+      - DB_NAME=shopify-ecommerce
+      - DB_USER=root
+      - DB_PASS=secret
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
     networks:
       - microservices-network
     volumes:
       - ./auth-service:/app
       - /app/node_modules
     command: npm run dev
+    restart: on-failure
 
   # user-service:
   #   build:
@@ -88,3 +120,6 @@ services:
 networks:
   microservices-network:
     driver: bridge
+
+volumes:
+  mongodb_data:

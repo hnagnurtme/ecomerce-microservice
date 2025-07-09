@@ -7,6 +7,8 @@ import { initKafka } from 'kafka/kafkaClient';
 import logger from 'utils/logger';
 import router from 'routes';
 import { errorHandler, notFound } from 'middleware/errorHandler';
+import appConfig from 'config/app.config';
+
 const app = express();
 
 // INIT MIDDLEWARE
@@ -33,7 +35,7 @@ app.use(notFound);
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = appConfig.app.port;
 app.listen(PORT, () => {
   logger.info(`Auth Service is running on port ${PORT}`);
 });
