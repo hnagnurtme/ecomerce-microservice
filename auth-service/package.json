@@ -1,0 +1,62 @@
+{
+  "dependencies": {
+    "@types/helmet": "^0.0.48",
+    "@types/mongoose": "^5.11.96",
+    "@types/winston": "^2.4.4",
+    "axios": "^1.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "16.4.7",
+    "ejs": "3.1.10",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "joi": "^17.13.3",
+    "mongoose": "^8.16.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.12.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@prisma/client": "^6.3.0",
+    "@types/axios": "^0.9.36",
+    "@types/cors": "^2.8.19",
+    "@types/ejs": "3.1.5",
+    "@types/express": "5.0.0",
+    "@types/joi": "^17.2.2",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^22.10.7",
+    "nodemon": "3.1.9",
+    "prisma": "6.3.0",
+    "slugify": "^1.6.6",
+    "ts-node": "10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "5.7.3"
+  },
+  "name": "hdit",
+  "version": "1.0.0",
+  "main": "dist/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon",
+    "dev": "nodemon",
+    "start:debug": "nodemon --inspect=9229 -e ts,tsx --exec node -r ts-node/register  -r tsconfig-paths/register ./src/app.ts",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "lint": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\"",
+    "type-check": "tsc --noEmit"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts",
+    "ignore": [
+      "node_modules"
+    ],
+    "exec": "ts-node -r tsconfig-paths/register ./src/app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

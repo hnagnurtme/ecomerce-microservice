@@ -1,0 +1,67 @@
+{
+  "name": "ecommerce-microservice",
+  "version": "1.0.0",
+  "description": "E-commerce microservice architecture",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "auth-service",
+    "api-gateway"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm run install:auth && npm run install:gateway",
+    "install:auth": "cd auth-service && npm install",
+    "install:gateway": "cd api-gateway && npm install",
+    "dev:all": "concurrently \"npm run dev:auth\" \"npm run dev:gateway\"",
+    "dev:auth": "cd auth-service && npm run dev",
+    "dev:gateway": "cd api-gateway && npm run dev",
+    "build:all": "npm run build:auth && npm run build:gateway",
+    "build:auth": "cd auth-service && npm run build",
+    "build:gateway": "cd api-gateway && npm run build",
+    "lint": "eslint . --ext .ts,.js --ignore-path .gitignore",
+    "lint:fix": "eslint . --ext .ts,.js --ignore-path .gitignore --fix",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky",
+    "commit": "git-cz"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "commitizen": "^4.3.0",
+    "concurrently": "^8.2.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "typescript": "^5.7.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "microservice",
+    "ecommerce",
+    "nodejs",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC"
+}
