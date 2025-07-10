@@ -1,35 +1,20 @@
-import { ApiResponse } from 'response/api.response';
+import { Response } from 'express';
+import { ApiResponse } from './api.response';
 
-export class SuccessResponse {
-  static create<T>(
-    data: T,
-    message = 'Success',
-    statusCode = 200
-  ): ApiResponse<T> {
-    return {
-      success: true,
-      message,
-      data,
-      timestamp: new Date().toISOString(),
-      statusCode,
-    };
+export class SuccessResponse<T = unknown> extends ApiResponse<T> {
+  constructor(data: T, message = 'Success', statusCode = 200) {
+    super(true, message, statusCode, data);
   }
 
-  static CREATED<T>(data: T, message = 'Created'): ApiResponse<T> {
-    return this.create(data, message, 201);
+  static OK<T>(data: T, message = 'OK') {
+    return new SuccessResponse<T>(data, message, 200);
   }
 
-  static OK<T>(data: T, message = 'OK'): ApiResponse<T> {
-    return this.create(data, message, 200);
+  static CREATED<T>(data: T, message = 'Created') {
+    return new SuccessResponse<T>(data, message, 201);
   }
 
-  static NO_CONTENT(message = 'No Content'): ApiResponse<null> {
-    return {
-      success: true,
-      message,
-      data: null,
-      timestamp: new Date().toISOString(),
-      statusCode: 204,
-    };
+  static NO_CONTENT(message = 'No Content') {
+    return new SuccessResponse<null>(null, message, 204);
   }
 }

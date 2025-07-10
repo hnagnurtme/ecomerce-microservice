@@ -12,7 +12,7 @@ const development = {
   },
   db: {
     host: env('HOST', 'localhost'),
-    port: env('PORT', 27017),
+    port: env('DB_PORT', 27017),
     database: env('DB_NAME', 'shopify-ecommerce'),
     username: env('DB_USER', 'root'),
     password: env('DB_PASS', 'secret'),
