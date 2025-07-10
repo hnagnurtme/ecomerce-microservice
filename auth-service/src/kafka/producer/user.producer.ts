@@ -3,6 +3,8 @@ import { log } from 'console';
 import { RegisterDto } from 'dtos';
 import { kafkaProducer } from 'kafka/kafkaClient';
 
+const KEY_REGISTER = 'register';
+
 export const publishUserRegisterEvent = async (payload: RegisterDto) => {
   try {
     log('Publishing user registration event:', payload);
@@ -10,7 +12,7 @@ export const publishUserRegisterEvent = async (payload: RegisterDto) => {
       topic: KAFKA_TOPICS.USER_REGISTERED,
       messages: [
         {
-          key: 'register',
+          key: KEY_REGISTER,
           value: JSON.stringify(payload),
         },
       ],

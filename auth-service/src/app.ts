@@ -8,7 +8,7 @@ import logger from 'utils/logger';
 import router from 'routes';
 import { errorHandler, notFound } from 'middleware/errorHandler';
 import appConfig from 'config/app.config';
-
+const ROUTER_PREFIX = appConfig.app.prefix || '/api/v1';
 const app = express();
 
 // INIT MIDDLEWARE
@@ -27,12 +27,12 @@ initKafka()
     process.exit(1);
   });
 // ROUTES
-app.use('', router);
+app.use(ROUTER_PREFIX, router);
 
 // ERROR HANDLING
 app.use(notFound);
-// CATCH ALL UNHANDLED ERRORS
 
+// CATCH ALL UNHANDLED ERRORS
 app.use(errorHandler);
 
 const PORT = appConfig.app.port;

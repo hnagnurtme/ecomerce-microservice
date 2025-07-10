@@ -1,5 +1,6 @@
 import { Kafka, Partitioners } from 'kafkajs';
 import logger from 'utils/logger';
+
 const kafka = new Kafka({
   clientId: 'auth-service',
   brokers: process.env.KAFKA_BROKERS?.split(',') || ['localhost:9092'],
