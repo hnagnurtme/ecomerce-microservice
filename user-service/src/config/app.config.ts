@@ -6,7 +6,7 @@ const development = {
     prefix: env('DEV_ROUTER_PREFIX', '/api/v1'),
   },
   jwt: {
-    secret: env('JWT_SECRET', ''),
+    secret: env('JWT_SECRET', 'jwt-secret'),
     accessExpiration: env('JWT_ACCESS_EXPIRATION', '1d'),
     refreshExpiration: env('JWT_REFRESH_EXPIRATION', '30d'),
   },
@@ -25,20 +25,20 @@ const development = {
 };
 const production = {
   app: {
-    port: env('DEV_APP_PORT', 8080),
+    port: env('DEV_APP_PORT', 3002),
     prefix: env('DEV_ROUTER_PREFIX', '/api/v1'),
   },
   jwt: {
-    secret: env('JWT_SECRET', 'gdscdut'),
+    secret: env('JWT_SECRET', 'jwt-secret'),
     accessExpiration: env('JWT_ACCESS_EXPIRATION', '1d'),
     refreshExpiration: env('JWT_REFRESH_EXPIRATION', '30d'),
   },
   db: {
     host: env('HOST', 'localhost'),
-    port: env('PORT', 27017),
-    database: env('DB_NAME', 'shopApp'),
-    username: env('DB_USER', 'shopApp'),
-    password: env('DB_PASS', 'shopApp'),
+    port: env('DB_PORT', 27017),
+    database: env('DB_NAME', 'shopify-ecommerce'),
+    username: env('DB_USER', 'root'),
+    password: env('DB_PASS', 'secret'),
     dialect: env('DB_DIALECT', 'mongodb'),
   },
   kafka: {

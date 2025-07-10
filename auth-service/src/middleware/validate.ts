@@ -1,16 +1,35 @@
+import { plainToInstance, ClassConstructor } from 'class-transformer';
+import { validate, ValidationError } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
-import { ObjectSchema } from 'joi';
 import { ErrorResponse } from 'response/error.respone';
 
-export const validate = (schema: ObjectSchema) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const { error } = schema.validate(req.body, { abortEarly: false });
+export function validateDto<T>(DtoClass: ClassConstructor<T>) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const dtoInstance = plainToInstance(DtoClass, req.body);
+      const errors = await validate(dtoInstance as object, {
+        whitelist: true,
+        forbidNonWhitelisted: false,
+        skipMissingProperties: false,
+      });
 
-    if (error) {
-      const message = error.details.map(detail => detail.message).join(', ');
-      return ErrorResponse.BADREQUEST(message, 'Validation failed').send(res);
+      if (errors.length > 0) {
+        const messages = errors
+          .flatMap((error: ValidationError) =>
+            Object.values(error.constraints || {})
+          )
+          .join(', ');
+
+        return ErrorResponse.BADREQUEST(messages, 'Validation failed').send(
+          res
+        );
+      }
+
+      req.body = dtoInstance;
+      next();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      return ErrorResponse.INTERNAL('Validation error', message).send(res);
     }
-
-    next();
   };
-};
+}

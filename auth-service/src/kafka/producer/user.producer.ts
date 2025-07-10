@@ -1,11 +1,13 @@
 import { KAFKA_TOPICS } from 'config';
 import { log } from 'console';
-import { RegisterDto } from 'dtos';
+import { RegisterKafkaPayload } from 'dtos';
 import { kafkaProducer } from 'kafka/kafkaClient';
 
 const KEY_REGISTER = 'register';
 
-export const publishUserRegisterEvent = async (payload: RegisterDto) => {
+export const publishUserRegisterEvent = async (
+  payload: RegisterKafkaPayload
+) => {
   try {
     log('Publishing user registration event:', payload);
     await kafkaProducer.send({

@@ -15,9 +15,7 @@ export class UserService {
     logger.info('UserService instance created');
   }
 
-  async creatUser(
-    userData: RegisterDto
-  ): Promise<{ user: Partial<RegisterDto> }> {
+  async creatUser(userData: RegisterDto) {
     /**
      * 1. Extract user information from the provided data.
      */
@@ -49,27 +47,14 @@ export class UserService {
     /**
      * 4.Check if the user was created successfully.
      */
-    const { _id, email: userEmail, firstName, lastName } = newUser;
+    const { _id } = newUser;
     if (!_id) {
       throw new ErrorResponse(
         errorMessage.INTERNAL_SERVER_ERROR,
         'User creation failed'
       );
     }
-    /**
-     * 5. Send message kafka to create a new user.
-     */
-    await publishCreatUserEvent(
-      mapIUsertoKafkaPayload(newUser) as UserRegisterKakfaPayload
-    );
 
     logger.info('User registration event published successfully');
-
-    return {
-      user: getInfoData({
-        fields: ['email', 'firstName', 'lastName'],
-        object: userData,
-      }),
-    };
   }
 }
