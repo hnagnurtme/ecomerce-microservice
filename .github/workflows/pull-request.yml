@@ -1,0 +1,98 @@
+name: Pull Request Workflow
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - 'release/**'
+      - main
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr_validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Build project
+        run: npm run build
+
+      - name: Check commit messages
+        run: |
+          # Kiểm tra commit message format
+          git log --oneline ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} | while read line; do
+            if [[ ! $line =~ ^[a-f0-9]+[[:space:]](feat|fix|docs|style|refactor|perf|test|chore|ci|build)(\(.+\))?:[[:space:]].+ ]]; then
+              echo "❌ Invalid commit message: $line"
+              echo "Please use conventional commit format: type(scope): description"
+              exit 1
+            fi
+          done
+
+      - name: Check branch naming
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          if [[ "${{ github.event.pull_request.base.ref }}" == "develop" ]]; then
+            if [[ ! $BRANCH_NAME =~ ^(feature|bugfix|hotfix)/.+ ]]; then
+              echo "❌ Invalid branch name for develop: $BRANCH_NAME"
+              echo "Please use: feature/*, bugfix/*, or hotfix/*"
+              exit 1
+            fi
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
+            if [[ ! $BRANCH_NAME =~ ^release/.+ ]]; then
+              echo "❌ Invalid branch name for main: $BRANCH_NAME"
+              echo "Please use: release/*"
+              exit 1
+            fi
+          fi
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('🎉 All checks passed!')
+            );
+            
+            if (!botComment) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `🎉 All checks passed! 
+                
+                **Branch**: \`${{ github.event.pull_request.head.ref }}\`
+                **Target**: \`${{ github.event.pull_request.base.ref }}\`
+                **Status**: ✅ Ready for review
+                
+                ### Checklist
+                - ✅ Tests are passing
+                - ✅ Code linting passed
+                - ✅ Build successful
+                - ✅ Branch naming convention followed
+                - ✅ Commit message format validated`
+              });
+            }

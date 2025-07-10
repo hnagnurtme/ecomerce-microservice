@@ -1,0 +1,195 @@
+name: GitFlow Workflow
+
+on:
+  push:
+    branches:
+      - develop
+      - 'release/**'
+      - main
+  pull_request:
+    branches:
+      - develop
+      - 'release/**'
+      - main
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Version for release (e.g., 1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  # Job chạy khi có push vào develop branch
+  develop_build:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run linting
+        run: npm run lint
+
+  # Job tạo release branch từ develop
+  create_release:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create release branch
+        run: |
+          git checkout -b release/${{ github.event.inputs.release_version }}
+          git push origin release/${{ github.event.inputs.release_version }}
+
+      - name: Create Pull Request to main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/${{ github.event.inputs.release_version }}
+          base: main
+          title: 'Release ${{ github.event.inputs.release_version }}'
+          body: |
+            ## Release ${{ github.event.inputs.release_version }}
+            
+            This PR contains the release version ${{ github.event.inputs.release_version }}
+            
+            ### Changes
+            - All changes from develop branch
+            - Ready for production deployment
+            
+            ### Checklist
+            - [ ] All tests are passing
+            - [ ] Code has been reviewed
+            - [ ] Documentation updated
+            - [ ] Ready for deployment
+
+  # Job chạy khi có push vào release branch
+  release_build:
+    if: startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+
+  # Job chạy khi merge vào main (production deployment)
+  production_deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Extract version from branch name
+        id: extract_version
+        run: |
+          # Lấy commit message để tìm version
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if [[ $COMMIT_MSG =~ Release[[:space:]]+([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+            VERSION=${BASH_REMATCH[1]}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          else
+            # Fallback: sử dụng timestamp
+            VERSION=$(date +%Y.%m.%d-%H%M%S)
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a v${{ steps.extract_version.outputs.version }} -m "Release v${{ steps.extract_version.outputs.version }}"
+          git push origin v${{ steps.extract_version.outputs.version }}
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.extract_version.outputs.version }}
+          release_name: Release v${{ steps.extract_version.outputs.version }}
+          body: |
+            ## Release v${{ steps.extract_version.outputs.version }}
+            
+            ### Changes
+            - Production release from main branch
+            - All features from develop branch included
+            
+            ### Deployment
+            - Automatically deployed to production
+            - Tagged as v${{ steps.extract_version.outputs.version }}
+          draft: false
+          prerelease: false
+
+      - name: Merge back to develop
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin develop
+          git checkout develop
+          git merge main --no-ff -m "Merge main back to develop after release v${{ steps.extract_version.outputs.version }}"
+          git push origin develop

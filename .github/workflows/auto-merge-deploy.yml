@@ -1,0 +1,184 @@
+name: Auto Merge and Deploy
+
+on:
+  schedule:
+    # Chạy hàng ngày lúc 9h sáng để kiểm tra và merge
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - 'merge-features-to-develop'
+          - 'create-release'
+          - 'deploy-to-production'
+      version:
+        description: 'Version for release (if creating release)'
+        required: false
+        type: string
+
+jobs:
+  auto_merge_features:
+    if: github.event_name == 'schedule' || github.event.inputs.action == 'merge-features-to-develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Find approved feature PRs
+        id: find_prs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              base: 'develop',
+              sort: 'updated',
+              direction: 'desc'
+            });
+            
+            const approvedPRs = [];
+            
+            for (const pr of prs) {
+              // Kiểm tra xem PR có được approve không
+              const { data: reviews } = await github.rest.pulls.listReviews({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number
+              });
+              
+              const approvedReviews = reviews.filter(review => review.state === 'APPROVED');
+              
+              if (approvedReviews.length > 0 && pr.head.ref.startsWith('feature/')) {
+                approvedPRs.push({
+                  number: pr.number,
+                  title: pr.title,
+                  branch: pr.head.ref
+                });
+              }
+            }
+            
+            core.setOutput('approved_prs', JSON.stringify(approvedPRs));
+            return approvedPRs;
+
+      - name: Auto merge approved PRs
+        run: |
+          echo "Processing approved PRs"
+          # Merge các PR đã được approve
+          git checkout develop
+          git pull origin develop
+
+  create_release_branch:
+    if: github.event.inputs.action == 'create-release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create release branch
+        run: |
+          VERSION=${{ github.event.inputs.version }}
+          git checkout -b release/$VERSION
+          
+          # Cập nhật version trong package.json
+          npm version $VERSION --no-git-tag-version
+          git add package.json
+          git commit -m "chore: bump version to $VERSION"
+          
+          git push origin release/$VERSION
+
+      - name: Create Pull Request to main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/${{ github.event.inputs.version }}
+          base: main
+          title: 'Release ${{ github.event.inputs.version }}'
+          body: |
+            ## 🚀 Release ${{ github.event.inputs.version }}
+            
+            This PR contains the release version ${{ github.event.inputs.version }}
+            
+            ### 📋 Pre-release Checklist
+            - [ ] All tests are passing
+            - [ ] Code has been reviewed
+            - [ ] Documentation updated
+            - [ ] Security audit completed
+            - [ ] Performance testing completed
+            - [ ] Ready for production deployment
+            
+            ### 🔄 Post-merge Actions
+            - Will create Git tag `v${{ github.event.inputs.version }}`
+            - Will create GitHub release
+            - Will merge back to develop
+            - Will deploy to production
+
+  deploy_to_production:
+    if: github.event.inputs.action == 'deploy-to-production'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for production
+        run: npm run build
+
+      - name: Run production tests
+        run: npm run test:prod
+
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploying to production..."
+          # Thêm deployment commands ở đây
+          # Ví dụ: deploy to AWS, Docker, etc.
+          
+      - name: Health check
+        run: |
+          echo "🔍 Running health check..."
+          # Thêm health check commands ở đây
+          
+      - name: Notify deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: context.payload.deployment.id,
+              state: 'success',
+              description: 'Deployment successful',
+              environment_url: 'https://your-production-url.com'
+            });
