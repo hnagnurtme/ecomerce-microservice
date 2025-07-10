@@ -3,7 +3,7 @@ import { kafkaConsumer } from 'kafka/kafkaClient';
 
 export const listenUserCreated = async () => {
   await kafkaConsumer.subscribe({
-    topic: KAFKA_TOPICS.USER_CREATED,
+    topic: KAFKA_TOPICS.USER_REGISTERED,
     fromBeginning: false,
   });
 
@@ -14,6 +14,9 @@ export const listenUserCreated = async () => {
         return;
       }
       const { userId, email } = JSON.parse(message.value.toString());
+
+      // Gọi tạo key-token tương ứng
+      //await KeyTokenService.createTokenForUser(userId);
 
       console.log(`✔️ Created token for user: ${email}`);
     },

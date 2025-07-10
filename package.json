@@ -6,18 +6,22 @@
   "private": true,
   "workspaces": [
     "auth-service",
-    "api-gateway"
+    "api-gateway",
+    "user-service"
   ],
   "scripts": {
-    "install:all": "npm install && npm run install:auth && npm run install:gateway",
+    "install:all": "npm install && npm run install:auth && npm run install:gateway && npm run install:user",
     "install:auth": "cd auth-service && npm install",
     "install:gateway": "cd api-gateway && npm install",
-    "dev:all": "concurrently \"npm run dev:auth\" \"npm run dev:gateway\"",
+    "install:user": "cd user-service && npm install",
+    "dev:all": "concurrently \"npm run dev:auth\" \"npm run dev:gateway\" \"npm run dev:user\"",
     "dev:auth": "cd auth-service && npm run dev",
     "dev:gateway": "cd api-gateway && npm run dev",
-    "build:all": "npm run build:auth && npm run build:gateway",
+    "dev:user": "cd user-service && npm run dev",
+    "build:all": "npm run build:auth && npm run build:gateway && npm run build:user",
     "build:auth": "cd auth-service && npm run build",
     "build:gateway": "cd api-gateway && npm run build",
+    "build:user": "cd user-service && npm run build",
     "lint": "eslint . --ext .ts,.js --ignore-path .gitignore",
     "lint:fix": "eslint . --ext .ts,.js --ignore-path .gitignore --fix",
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
