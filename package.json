@@ -18,6 +18,7 @@
     "dev:auth": "cd auth-service && npm run dev",
     "dev:gateway": "cd api-gateway && npm run dev",
     "dev:user": "cd user-service && npm run dev",
+    "build": "npm run build:all",
     "build:all": "npm run build:auth && npm run build:gateway && npm run build:user",
     "build:auth": "cd auth-service && npm run build",
     "build:gateway": "cd api-gateway && npm run build",

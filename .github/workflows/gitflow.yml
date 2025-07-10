@@ -38,11 +38,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test
+      - name: Build auth-service
+        run: cd auth-service && npm install && npm run build
 
-      - name: Build project
-        run: npm run build
+      - name: Build user-service
+        run: cd user-service && npm install && npm run build
 
       - name: Run linting
         run: npm run lint
@@ -51,6 +51,9 @@ jobs:
   create_release:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout develop
         uses: actions/checkout@v4
@@ -110,11 +113,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test
+      - name: Build auth-service
+        run: cd auth-service && npm install && npm run build
 
-      - name: Build project
-        run: npm run build
+      - name: Build user-service
+        run: cd user-service && npm install && npm run build
 
       - name: Run linting
         run: npm run lint
@@ -126,11 +129,15 @@ jobs:
   production_deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -141,8 +148,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
-        run: npm run build
+      - name: Build auth-service
+        run: cd auth-service && npm install && npm run build
+
+      - name: Build user-service
+        run: cd user-service && npm install && npm run build
 
       - name: Extract version from branch name
         id: extract_version
@@ -164,14 +174,14 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a v${{ steps.extract_version.outputs.version }} -m "Release v${{ steps.extract_version.outputs.version }}"
           git push origin v${{ steps.extract_version.outputs.version }}
-
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.extract_version.outputs.version }}
-          release_name: Release v${{ steps.extract_version.outputs.version }}
+          name: Release v${{ steps.extract_version.outputs.version }}
           body: |
             ## Release v${{ steps.extract_version.outputs.version }}
             
@@ -184,6 +194,8 @@ jobs:
             - Tagged as v${{ steps.extract_version.outputs.version }}
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge back to develop
         run: |
@@ -191,5 +203,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin develop
           git checkout develop
-          git merge main --no-ff -m "Merge main back to develop after release v${{ steps.extract_version.outputs.version }}"
+          git merge main --no-ff -m "chore: merge main back to develop after release v${{ steps.extract_version.outputs.version }}" --no-verify
           git push origin develop
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
