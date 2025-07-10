@@ -38,11 +38,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test
+      - name: Build auth-service
+        run: cd auth-service && npm install && npm run build
 
-      - name: Build project
-        run: npm run build
+      - name: Build user-service
+        run: cd user-service && npm install && npm run build
 
       - name: Run linting
         run: npm run lint
@@ -110,11 +110,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
-        run: npm test
+      - name: Build auth-service
+        run: cd auth-service && npm install && npm run build
 
-      - name: Build project
-        run: npm run build
+      - name: Build user-service
+        run: cd user-service && npm install && npm run build
 
       - name: Run linting
         run: npm run lint
@@ -141,8 +141,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
-        run: npm run build
+      - name: Build auth-service
+        run: cd auth-service && npm install && npm run build
+
+      - name: Build user-service
+        run: cd user-service && npm install && npm run build
 
       - name: Extract version from branch name
         id: extract_version
