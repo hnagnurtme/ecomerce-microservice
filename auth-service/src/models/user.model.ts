@@ -1,4 +1,4 @@
-import { model, Types, Schema, Document } from 'mongoose';
+import { model, Schema, Document } from 'mongoose';
 
 const DOCUMENT_NAME = 'User';
 const COLLECTION_NAME = 'Users';
