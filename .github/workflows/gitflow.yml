@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - develop
-      - 'release/**'
-      - main
-  pull_request:
-    branches:
-      - develop
-      - 'release/**'
       - main
   workflow_dispatch:
     inputs:
