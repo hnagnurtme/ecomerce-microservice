@@ -2,6 +2,7 @@ import env from 'utils/exportenv';
 
 const development = {
   app: {
+    name: env('DEV_APP_NAME', 'auth-service'),
     port: env('DEV_APP_PORT', 3001),
     prefix: env('DEV_ROUTER_PREFIX', '/api/v1'),
   },
@@ -25,6 +26,7 @@ const development = {
 };
 const production = {
   app: {
+    name: env('DEV_APP_NAME', 'auth-service'),
     port: env('DEV_APP_PORT', 8080),
     prefix: env('DEV_ROUTER_PREFIX', '/api/v1'),
   },
