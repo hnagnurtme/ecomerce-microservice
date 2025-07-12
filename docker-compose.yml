@@ -49,30 +49,30 @@ services:
       retries: 5
 
   # Application Services
-  # api-gateway:
-  #   build:
-  #     context: ./api-gateway
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - NODE_ENV=development
-  #     - AUTH_SERVICE_URL=http://auth-service:3001
-  #     - USER_SERVICE_URL=http://user-service:3002
-  #   depends_on:
-  #     - kafka
-  #     - auth-service
-  #     - user-service
-  #   networks:
-  #     - microservices-network
-  #   volumes:
-  #     - ./api-gateway:/app
-  #     - /app/node_modules
-  #   command: npm run dev
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - USER_SERVICE_URL=http://user-service:3002
+    depends_on:
+      - kafka
+      - auth-service
+      - user-service
+    networks:
+      - microservices-network
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    command: npm run dev 
 
   auth-service:
     build:
-      context: ./auth-service
+      context: ./auth-service 
       dockerfile: dockerfile
     ports:
       - "3001:3001"
