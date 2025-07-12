@@ -24,4 +24,13 @@ export class AuthController {
       next(error);
     }
   }
+
+  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      SuccessResponse.OK(await this.authService.login(req.body)).send(res);
+    } catch (error) {
+      logger.error('Error in AuthController.login:', error);
+      next(error);
+    }
+  }
 }

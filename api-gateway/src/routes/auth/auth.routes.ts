@@ -1,10 +1,11 @@
-// src/routes/auth.routes.ts
+import appConfig from 'config/app.config';
 import { Router } from 'express';
 import { createServiceProxy } from 'proxies/ProxyFactory';
+const { AUTH_SERVICE_URL } = appConfig.serviceUrls;
+const authServiceUrl: string = AUTH_SERVICE_URL || 'http://auth-service:3001';
 
 const authRouter = Router();
-const AUTH_SERVICE_URL = 'http://auth-service:3001';
 
-authRouter.use('/register', createServiceProxy(AUTH_SERVICE_URL));
-
+authRouter.use('/register', createServiceProxy(authServiceUrl));
+authRouter.use('/login', createServiceProxy(authServiceUrl));
 export default authRouter;
