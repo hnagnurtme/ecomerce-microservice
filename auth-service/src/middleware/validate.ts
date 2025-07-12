@@ -20,16 +20,14 @@ export function validateDto<T>(DtoClass: ClassConstructor<T>) {
           )
           .join(', ');
 
-        return ErrorResponse.BADREQUEST(messages, 'Validation failed').send(
-          res
-        );
+        return ErrorResponse.BADREQUEST(messages).send(res);
       }
 
       req.body = dtoInstance;
       next();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      return ErrorResponse.INTERNAL('Validation error', message).send(res);
+      return ErrorResponse.INTERNAL('Validation error').send(res);
     }
   };
 }
