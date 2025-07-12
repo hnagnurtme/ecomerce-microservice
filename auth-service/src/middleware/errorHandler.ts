@@ -35,10 +35,7 @@ export const errorHandler = (
       'Duplicate resource'
     );
   } else if (error.name === 'CastError') {
-    response = ErrorResponse.BADREQUEST(
-      'Invalid ID format',
-      'Invalid resource ID'
-    );
+    response = ErrorResponse.BADREQUEST('Invalid ID format');
   } else if (error.statusCode) {
     response = ErrorResponse.create(error.message, 'Error', error.statusCode);
   } else {

@@ -15,3 +15,16 @@ export const getInfoData = ({ fields = [] as string[], object = {} }) => {
 export const getSelectData = (select: string[] = []) => {
   return Object.fromEntries(select.map(el => [el, 1]));
 };
+
+export const convertToIdString = (id: Types.ObjectId | string) => {
+  if (!id) {
+    return '';
+  }
+  if (typeof id === 'string') {
+    return id;
+  }
+  if (id instanceof Types.ObjectId) {
+    return id.toString();
+  }
+  throw new Error(`Invalid ObjectId: ${JSON.stringify(id)}`);
+};
