@@ -1,6 +1,7 @@
 # E-commerce Microservice
 
-Hệ thống microservice cho ứng dụng thương mại điện tử được xây dựng với Node.js, TypeScript và các công nghệ hiện đại.
+Hệ thống microservice cho ứng dụng thương mại điện tử được xây dựng với Node.js, TypeScript và các
+công nghệ hiện đại.
 
 ## Cấu trúc dự án
 
@@ -133,39 +134,40 @@ npm run commit
 
 1. **Clone dự án và cài đặt dependencies:**
 
-   ```bash
-   git clone <repository-url>
-   cd ecommerce-microservice
-   npm run install:all
-   ```
+    ```bash
+    git clone <repository-url>
+    cd ecommerce-microservice
+    npm run install:all
+    ```
 
 2. **Tạo branch mới:**
 
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
 
 3. **Phát triển tính năng:**
 
-   ```bash
-   npm run dev:all  # hoặc chạy riêng service cần thiết
-   ```
+    ```bash
+    npm run dev:all  # hoặc chạy riêng service cần thiết
+    ```
 
 4. **Commit changes:**
 
-   ```bash
-   git add .
-   npm run commit  # hoặc git commit với message theo format
-   ```
+    ```bash
+    git add .
+    npm run commit  # hoặc git commit với message theo format
+    ```
 
 5. **Push và tạo Pull Request:**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+    ```bash
+    git push origin feature/your-feature-name
+    ```
 
 ## Cấu hình Editor
 
-Dự án bao gồm `.editorconfig` để đảm bảo consistency giữa các editor. Hầu hết các editor hiện đại đều hỗ trợ EditorConfig.
+Dự án bao gồm `.editorconfig` để đảm bảo consistency giữa các editor. Hầu hết các editor hiện đại
+đều hỗ trợ EditorConfig.
 
 ### VS Code Extensions khuyến nghị:
 

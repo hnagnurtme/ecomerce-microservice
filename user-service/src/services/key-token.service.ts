@@ -1,5 +1,5 @@
 export class KeyTokenService {
-  constructor() {
-    console.log('KeyTokenService instance created');
-  }
+    constructor() {
+        console.log('KeyTokenService instance created');
+    }
 }

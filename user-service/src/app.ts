@@ -23,20 +23,20 @@ app.use(express.urlencoded({ extended: true }));
 initDatabase.connect();
 // INIT KAFKA
 initKafka()
-  .then(() => logger.info('Kafka initialized successfully'))
-  .catch(error => {
-    logger.error('Error initializing Kafka:', error);
-    process.exit(1);
-  });
+    .then(() => logger.info('Kafka initialized successfully'))
+    .catch((error) => {
+        logger.error('Error initializing Kafka:', error);
+        process.exit(1);
+    });
 
 // LISTEN TO KAFKA EVENTS
 
 listenUserCreated()
-  .then(() => logger.info('Listening to user created events'))
-  .catch(error => {
-    logger.error('Error listening to user created events:', error);
-    process.exit(1);
-  });
+    .then(() => logger.info('Listening to user created events'))
+    .catch((error) => {
+        logger.error('Error listening to user created events:', error);
+        process.exit(1);
+    });
 // ROUTES
 app.use(ROUTER_PREFIX, router);
 
@@ -48,5 +48,5 @@ app.use(errorHandler);
 
 const PORT = appConfig.app.port;
 app.listen(PORT, () => {
-  logger.info(`Auth Service is running on port ${PORT}`);
+    logger.info(`Auth Service is running on port ${PORT}`);
 });
