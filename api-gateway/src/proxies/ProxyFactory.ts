@@ -2,6 +2,8 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { ClientRequest } from 'http';
 import logger from 'utils/logger';
+import appConfig from 'config/app.config';
+const gatewayApiKey = appConfig.apiKey.gateway as string;
 
 export function createServiceProxy(
     serviceUrl: string,
@@ -17,6 +19,10 @@ export function createServiceProxy(
                     logger.info(
                         `[PROXY] Forwarding ${req.method} ${req.originalUrl} → ${serviceUrl}${req.url}`,
                     );
+                    // ADD GATEWAY API KEY
+                    if (gatewayApiKey) {
+                        proxyReq.setHeader('x-gateway-api-key', gatewayApiKey);
+                    }
                 },
             },
         });

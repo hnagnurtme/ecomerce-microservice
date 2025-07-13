@@ -1,4 +1,3 @@
-import { Response } from 'express';
 import { ApiResponse } from './api.response';
 
 export class SuccessResponse<T = unknown> extends ApiResponse<T> {

@@ -1,35 +1,44 @@
+import { Response } from 'express';
 import { ApiResponse } from './api.response';
 
 export class ErrorResponse extends ApiResponse<null> {
-    constructor(error: string, message = 'Error', statusCode = 500) {
+    constructor(message: string, error: string, statusCode: number = 500) {
         super(false, message, statusCode, null, error);
     }
 
-    static create(error: string, message = 'Error', statusCode = 500): ErrorResponse {
-        return new ErrorResponse(error, message, statusCode);
+    static create(message: string, error: string, statusCode: number = 500): ErrorResponse {
+        return new ErrorResponse(message, error, statusCode);
     }
 
-    static BADREQUEST(error: string, message = 'Bad Request') {
-        return this.create(error, message, 400);
+    static UNAUTHORIZED(
+        message = 'Authentication required',
+        error = 'AUTH_0101',
+        statusCode = 401,
+    ) {
+        return this.create(message, error, statusCode);
     }
 
-    static UNAUTHORIZED(error = 'Unauthorized', message = 'Authentication required') {
-        return this.create(error, message, 401);
+    static BADREQUEST(message = 'Bad request', error = 'COMMON_400', statusCode = 400) {
+        return this.create(message, error, statusCode);
     }
 
-    static FORBIDDEN(error = 'Forbidden', message = 'Access denied') {
-        return this.create(error, message, 403);
+    static FORBIDDEN(message = 'Access denied', error = 'AUTH_0102', statusCode = 403) {
+        return this.create(message, error, statusCode);
     }
 
-    static NOTFOUND(error = 'Not found', message = 'Resource not found') {
-        return this.create(error, message, 404);
+    static NOTFOUND(message = 'Resource not found', error = 'COMMON_404', statusCode = 404) {
+        return this.create(message, error, statusCode);
     }
 
-    static CONFLICT(error: string, message = 'Conflict') {
-        return this.create(error, message, 409);
+    static CONFLICT(message = 'Conflict occurred', error = 'COMMON_409', statusCode = 409) {
+        return this.create(message, error, statusCode);
     }
 
-    static INTERNAL(error = 'Internal server error', message = 'Something went wrong') {
-        return this.create(error, message, 500);
+    static INTERNAL(message = 'Something went wrong', error = 'COMMON_500', statusCode = 500) {
+        return this.create(message, error, statusCode);
+    }
+
+    send(res: Response, headers: Record<string, string> = {}) {
+        return super.send(res, headers);
     }
 }

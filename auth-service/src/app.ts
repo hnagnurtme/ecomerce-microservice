@@ -10,6 +10,7 @@ import router from 'routes';
 import { errorHandler, notFound } from 'middleware/errorHandler';
 import { requestLogger } from 'middleware/loggerHandler';
 import appConfig from 'config/app.config';
+import { gatewayAPIKeyHandler } from 'middleware/authHandler';
 const ROUTER_PREFIX = appConfig.app.prefix || '/api/v1';
 const app = express();
 
@@ -31,6 +32,8 @@ initKafka()
 
 // INIT LOGGER
 app.use(requestLogger);
+// API KEY HANDLER
+app.use(gatewayAPIKeyHandler);
 // ROUTES
 app.use(ROUTER_PREFIX, router);
 
