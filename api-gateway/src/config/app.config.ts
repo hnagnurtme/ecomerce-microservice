@@ -11,6 +11,14 @@ const development = {
     accessExpiration: env('JWT_ACCESS_EXPIRATION', '1d'),
     refreshExpiration: env('JWT_REFRESH_EXPIRATION', '30d'),
   },
+  db: {
+    host: env('HOST', 'localhost'),
+    port: env('DB_PORT', 27017),
+    database: env('DB_NAME', 'shopify-ecommerce'),
+    username: env('DB_USER', 'root'),
+    password: env('DB_PASS', 'secret'),
+    dialect: env('DB_DIALECT', 'mongodb'),
+  },
   nodeEnv: env('NODE_ENV', 'development'),
   serviceUrls: {
     AUTH_SERVICE_URL: env('AUTH_SERVICE_URL', 'http://auth-service:3001'),
@@ -26,6 +34,14 @@ const production = {
     secret: env('JWT_SECRET', '123456789'),
     accessExpiration: env('JWT_ACCESS_EXPIRATION', '1d'),
     refreshExpiration: env('JWT_REFRESH_EXPIRATION', '30d'),
+  },
+  db: {
+    host: env('HOST', 'localhost'),
+    port: env('DB_PORT', 27017),
+    database: env('DB_NAME', 'shopify-ecommerce'),
+    username: env('DB_USER', 'root'),
+    password: env('DB_PASS', 'secret'),
+    dialect: env('DB_DIALECT', 'mongodb'),
   },
   serviceUrls: {
     AUTH_SERVICE_URL: env('AUTH_SERVICE_URL', 'http://auth-service:3001'),
