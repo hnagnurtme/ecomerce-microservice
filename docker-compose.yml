@@ -59,10 +59,14 @@ services:
       - NODE_ENV=development
       - AUTH_SERVICE_URL=http://auth-service:3001
       - USER_SERVICE_URL=http://user-service:3002
+      - HOST=mongodb
+      - DB_PORT=27017
+      - DB_NAME=shopify-ecommerce
+      - DB_USER=root
+      - DB_PASS=secret
     depends_on:
-      - kafka
-      - auth-service
-      - user-service
+      mongodb:
+        condition: service_healthy 
     networks:
       - microservices-network
     volumes:
