@@ -23,6 +23,9 @@ const development = {
     serviceUrls: {
         AUTH_SERVICE_URL: env('AUTH_SERVICE_URL', 'http://auth-service:3001'),
     },
+    apiKey: {
+        gateway: env('API_KEY_GATEWAY', '123456789'),
+    },
 };
 const production = {
     app: {
@@ -45,6 +48,9 @@ const production = {
     },
     serviceUrls: {
         AUTH_SERVICE_URL: env('AUTH_SERVICE_URL', 'http://auth-service:3001'),
+    },
+    apiKey: {
+        gateway: env('API_KEY_GATEWAY', '123456789'),
     },
     nodeEnv: env('NODE_ENV', 'development'),
 };
