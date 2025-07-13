@@ -23,11 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 initDatabase.connect();
 // INIT KAFKA
 initKafka()
-  .then(() => logger.info('Kafka initialized successfully'))
-  .catch(error => {
-    logger.error('Error initializing Kafka:', error);
-    process.exit(1);
-  });
+    .then(() => logger.info('Kafka initialized successfully'))
+    .catch((error) => {
+        logger.error('Error initializing Kafka:', error);
+        process.exit(1);
+    });
 
 // INIT LOGGER
 app.use(requestLogger);
@@ -35,15 +35,15 @@ app.use(requestLogger);
 app.use(ROUTER_PREFIX, router);
 
 app.get('/health', (req: Request, res: Response) => {
-  return res.status(200).json({
-    status: 'success',
-    data: {
-      name: appConfig.app.name,
-      environment: appConfig.nodeEnv,
-      prefix: ROUTER_PREFIX,
-    },
-    message: 'API Gateway is running',
-  });
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            name: appConfig.app.name,
+            environment: appConfig.nodeEnv,
+            prefix: ROUTER_PREFIX,
+        },
+        message: 'API Gateway is running',
+    });
 });
 
 // ERROR HANDLING
@@ -54,5 +54,5 @@ app.use(errorHandler);
 
 const PORT = appConfig.app.port;
 app.listen(PORT, () => {
-  logger.info(`Auth Service is running on port ${PORT}`);
+    logger.info(`Auth Service is running on port ${PORT}`);
 });

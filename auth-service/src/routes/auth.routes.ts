@@ -9,13 +9,13 @@ const authRouter = Router();
 const authController = new AuthController();
 
 authRouter.post(
-  '/register',
-  validateDto(RegisterDto),
-  asyncHandler(authController.register.bind(authController))
+    '/register',
+    validateDto(RegisterDto),
+    asyncHandler(authController.register.bind(authController)),
 );
 authRouter.post(
-  '/login',
-  validateDto(LoginDto),
-  asyncHandler(authController.login.bind(authController))
+    '/login',
+    validateDto(LoginDto),
+    asyncHandler(authController.login.bind(authController)),
 );
 export default authRouter;

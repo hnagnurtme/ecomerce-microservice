@@ -1,82 +1,82 @@
 {
-  "name": "ecommerce-microservice",
-  "version": "1.0.0",
-  "description": "E-commerce microservice architecture",
-  "main": "index.js",
-  "private": true,
-  "workspaces": [
-    "auth-service",
-    "api-gateway",
-    "user-service"
-  ],
-  "scripts": {
-    "install:all": "npm install && npm run install:auth && npm run install:gateway && npm run install:user",
-    "install:auth": "cd auth-service && npm install",
-    "install:gateway": "cd api-gateway && npm install",
-    "install:user": "cd user-service && npm install",
-    "dev:all": "concurrently \"npm run dev:auth\" \"npm run dev:gateway\" \"npm run dev:user\"",
-    "dev:auth": "cd auth-service && npm run dev",
-    "dev:gateway": "cd api-gateway && npm run dev",
-    "dev:user": "cd user-service && npm run dev",
-    "build": "npm run build:all",
-    "build:all": "npm run build:auth && npm run build:gateway && npm run build:user",
-    "build:auth": "cd auth-service && npm run build",
-    "build:gateway": "cd api-gateway && npm run build",
-    "build:user": "cd user-service && npm run build",
-    "test": "npm run test:auth && npm run test:gateway && npm run test:user",
-    "test:auth": "cd auth-service && npm test",
-    "test:gateway": "cd api-gateway && npm test",
-    "test:user": "cd user-service && npm test",
-    "test:prod": "NODE_ENV=production npm run test",
-    "lint": "eslint . --ext .ts,.js --ignore-path .gitignore",
-    "lint:fix": "eslint . --ext .ts,.js --ignore-path .gitignore --fix",
-    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
-    "type-check": "tsc --noEmit",
-    "prepare": "husky",
-    "commit": "git-cz",
-    "gitflow": "./scripts/gitflow.sh",
-    "gitflow:feature": "./scripts/gitflow.sh start-feature",
-    "gitflow:release": "./scripts/gitflow.sh start-release",
-    "gitflow:status": "./scripts/gitflow.sh status"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^19.0.0",
-    "@commitlint/config-conventional": "^19.0.0",
-    "@types/lodash": "^4.17.20",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "commitizen": "^4.3.0",
-    "concurrently": "^8.2.2",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5",
-    "typescript": "^5.7.3"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,js}": [
-      "eslint --fix",
-      "prettier --write"
+    "name": "ecommerce-microservice",
+    "version": "1.0.0",
+    "description": "E-commerce microservice architecture",
+    "main": "index.js",
+    "private": true,
+    "workspaces": [
+        "auth-service",
+        "api-gateway",
+        "user-service"
     ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
-  "keywords": [
-    "microservice",
-    "ecommerce",
-    "nodejs",
-    "typescript"
-  ],
-  "author": "",
-  "license": "ISC"
+    "scripts": {
+        "install:all": "npm install && npm run install:auth && npm run install:gateway && npm run install:user",
+        "install:auth": "cd auth-service && npm install",
+        "install:gateway": "cd api-gateway && npm install",
+        "install:user": "cd user-service && npm install",
+        "dev:all": "concurrently \"npm run dev:auth\" \"npm run dev:gateway\" \"npm run dev:user\"",
+        "dev:auth": "cd auth-service && npm run dev",
+        "dev:gateway": "cd api-gateway && npm run dev",
+        "dev:user": "cd user-service && npm run dev",
+        "build": "npm run build:all",
+        "build:all": "npm run build:auth && npm run build:gateway && npm run build:user",
+        "build:auth": "cd auth-service && npm run build",
+        "build:gateway": "cd api-gateway && npm run build",
+        "build:user": "cd user-service && npm run build",
+        "test": "npm run test:auth && npm run test:gateway && npm run test:user",
+        "test:auth": "cd auth-service && npm test",
+        "test:gateway": "cd api-gateway && npm test",
+        "test:user": "cd user-service && npm test",
+        "test:prod": "NODE_ENV=production npm run test",
+        "lint": "eslint . --ext .ts,.js --ignore-path .gitignore",
+        "lint:fix": "eslint . --ext .ts,.js --ignore-path .gitignore --fix",
+        "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+        "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
+        "type-check": "tsc --noEmit",
+        "prepare": "husky",
+        "commit": "git-cz",
+        "gitflow": "./scripts/gitflow.sh",
+        "gitflow:feature": "./scripts/gitflow.sh start-feature",
+        "gitflow:release": "./scripts/gitflow.sh start-release",
+        "gitflow:status": "./scripts/gitflow.sh status"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^19.0.0",
+        "@commitlint/config-conventional": "^19.0.0",
+        "@types/lodash": "^4.17.20",
+        "@typescript-eslint/eslint-plugin": "^7.18.0",
+        "@typescript-eslint/parser": "^7.18.0",
+        "commitizen": "^4.3.0",
+        "concurrently": "^8.2.2",
+        "cz-conventional-changelog": "^3.3.0",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.5.1",
+        "husky": "^9.0.11",
+        "lint-staged": "^15.2.2",
+        "prettier": "^3.6.2",
+        "typescript": "^5.7.3"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "lint-staged": {
+        "*.{ts,js}": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*.{json,md}": [
+            "prettier --write"
+        ]
+    },
+    "keywords": [
+        "microservice",
+        "ecommerce",
+        "nodejs",
+        "typescript"
+    ],
+    "author": "",
+    "license": "ISC"
 }

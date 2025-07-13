@@ -30,14 +30,14 @@ app.use(authenciation);
 
 // HEALTH CHECK
 app.get('/health', (req: Request, res: Response) => {
-  return new SuccessResponse(
-    {
-      name: appConfig.app.name,
-      environment: appConfig.nodeEnv,
-      prefix: ROUTER_PREFIX,
-    },
-    'API Gateway is running'
-  ).send(res);
+    return new SuccessResponse(
+        {
+            name: appConfig.app.name,
+            environment: appConfig.nodeEnv,
+            prefix: ROUTER_PREFIX,
+        },
+        'API Gateway is running',
+    ).send(res);
 });
 
 // ERROR HANDLING
@@ -48,5 +48,5 @@ app.use(errorHandler);
 
 const PORT = appConfig.app.port || 3000;
 app.listen(PORT, () => {
-  logger.info(`Api Gateway is running on port ${PORT}`);
+    logger.info(`Api Gateway is running on port ${PORT}`);
 });

@@ -7,9 +7,9 @@ const authRouter = Router();
 const authController = new AuthController();
 
 authRouter.post(
-  '/register',
-  validateDto(RegisterDto),
-  asyncHandler(authController.register.bind(authController))
+    '/register',
+    validateDto(RegisterDto),
+    asyncHandler(authController.register.bind(authController)),
 );
 
 export default authRouter;

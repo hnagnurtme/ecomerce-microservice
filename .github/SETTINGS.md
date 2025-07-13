@@ -6,26 +6,26 @@
 
 ```json
 {
-  "protection": {
-    "required_status_checks": {
-      "strict": true,
-      "contexts": ["build", "test", "lint"]
-    },
-    "enforce_admins": true,
-    "required_pull_request_reviews": {
-      "required_approving_review_count": 2,
-      "dismiss_stale_reviews": true,
-      "require_code_owner_reviews": true
-    },
-    "restrictions": {
-      "users": [],
-      "teams": [],
-      "apps": []
-    },
-    "required_linear_history": true,
-    "allow_force_pushes": false,
-    "allow_deletions": false
-  }
+    "protection": {
+        "required_status_checks": {
+            "strict": true,
+            "contexts": ["build", "test", "lint"]
+        },
+        "enforce_admins": true,
+        "required_pull_request_reviews": {
+            "required_approving_review_count": 2,
+            "dismiss_stale_reviews": true,
+            "require_code_owner_reviews": true
+        },
+        "restrictions": {
+            "users": [],
+            "teams": [],
+            "apps": []
+        },
+        "required_linear_history": true,
+        "allow_force_pushes": false,
+        "allow_deletions": false
+    }
 }
 ```
 
@@ -33,22 +33,22 @@
 
 ```json
 {
-  "protection": {
-    "required_status_checks": {
-      "strict": true,
-      "contexts": ["build", "test", "lint"]
-    },
-    "enforce_admins": false,
-    "required_pull_request_reviews": {
-      "required_approving_review_count": 1,
-      "dismiss_stale_reviews": true,
-      "require_code_owner_reviews": false
-    },
-    "restrictions": null,
-    "required_linear_history": false,
-    "allow_force_pushes": false,
-    "allow_deletions": false
-  }
+    "protection": {
+        "required_status_checks": {
+            "strict": true,
+            "contexts": ["build", "test", "lint"]
+        },
+        "enforce_admins": false,
+        "required_pull_request_reviews": {
+            "required_approving_review_count": 1,
+            "dismiss_stale_reviews": true,
+            "require_code_owner_reviews": false
+        },
+        "restrictions": null,
+        "required_linear_history": false,
+        "allow_force_pushes": false,
+        "allow_deletions": false
+    }
 }
 ```
 
@@ -104,8 +104,8 @@ Add these secrets in Repository Settings > Secrets and variables > Actions:
 
 ```json
 {
-  "url": "https://hooks.slack.com/services/...",
-  "events": ["push", "pull_request", "release"]
+    "url": "https://hooks.slack.com/services/...",
+    "events": ["push", "pull_request", "release"]
 }
 ```
 
@@ -113,7 +113,7 @@ Add these secrets in Repository Settings > Secrets and variables > Actions:
 
 ```json
 {
-  "url": "https://discord.com/api/webhooks/...",
-  "events": ["push", "pull_request", "release"]
+    "url": "https://discord.com/api/webhooks/...",
+    "events": ["push", "pull_request", "release"]
 }
 ```

@@ -2,7 +2,8 @@
 
 ## 📋 Tổng quan
 
-Dự án này sử dụng GitFlow workflow với GitHub Actions để tự động hóa quá trình phát triển, kiểm thử và triển khai.
+Dự án này sử dụng GitFlow workflow với GitHub Actions để tự động hóa quá trình phát triển, kiểm thử
+và triển khai.
 
 ## 🌳 Cấu trúc Branch
 
@@ -60,10 +61,10 @@ git push origin release/1.0.0
 
 - Tạo Pull Request từ `release/*` vào `main`
 - Sau khi merge, GitHub Actions sẽ:
-  - Tạo Git tag
-  - Tạo GitHub Release
-  - Deploy lên production
-  - Merge ngược về develop
+    - Tạo Git tag
+    - Tạo GitHub Release
+    - Deploy lên production
+    - Merge ngược về develop
 
 ## 🔧 GitHub Actions Workflows
 
@@ -71,27 +72,27 @@ git push origin release/1.0.0
 
 - **Trigger**: Push vào develop, release/\*, main
 - **Chức năng**:
-  - Build và test code
-  - Tự động tạo release branch
-  - Deploy production và tạo tag
-  - Merge ngược về develop
+    - Build và test code
+    - Tự động tạo release branch
+    - Deploy production và tạo tag
+    - Merge ngược về develop
 
 ### 2. Pull Request Workflow (`pull-request.yml`)
 
 - **Trigger**: Pull Request tạo mới hoặc cập nhật
 - **Chức năng**:
-  - Validate code quality
-  - Kiểm tra naming convention
-  - Validate commit messages
-  - Comment status trên PR
+    - Validate code quality
+    - Kiểm tra naming convention
+    - Validate commit messages
+    - Comment status trên PR
 
 ### 3. Auto Merge & Deploy (`auto-merge-deploy.yml`)
 
 - **Trigger**: Manual dispatch hoặc schedule
 - **Chức năng**:
-  - Tự động merge approved PRs
-  - Tạo release branch
-  - Deploy production
+    - Tự động merge approved PRs
+    - Tạo release branch
+    - Deploy production
 
 ## 📝 Quy tắc Naming Convention
 
@@ -191,11 +192,11 @@ Có thể thêm scripts trong `package.json`:
 
 ```json
 {
-  "scripts": {
-    "test:prod": "npm test -- --coverage",
-    "build:prod": "NODE_ENV=production npm run build",
-    "deploy": "your-deploy-script"
-  }
+    "scripts": {
+        "test:prod": "npm test -- --coverage",
+        "build:prod": "NODE_ENV=production npm run build",
+        "deploy": "your-deploy-script"
+    }
 }
 ```
 

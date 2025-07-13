@@ -3,25 +3,19 @@ import { AuthService } from 'services';
 import logger from 'utils/logger';
 import { SuccessResponse } from 'response';
 export class AuthController {
-  private authService: AuthService;
+    private authService: AuthService;
 
-  constructor() {
-    this.authService = new AuthService();
-    logger.info('AuthController instance created');
-  }
-
-  async register(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      SuccessResponse.CREATED(await this.authService.register(req.body)).send(
-        res
-      );
-    } catch (error) {
-      logger.error('Error in AuthController.register:', error);
-      next(error);
+    constructor() {
+        this.authService = new AuthService();
+        logger.info('AuthController instance created');
     }
-  }
+
+    async register(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            SuccessResponse.CREATED(await this.authService.register(req.body)).send(res);
+        } catch (error) {
+            logger.error('Error in AuthController.register:', error);
+            next(error);
+        }
+    }
 }
