@@ -29,24 +29,7 @@ services:
             interval: 10s
             timeout: 10s
             retries: 5
-  mongodb:
-    image: mongo:7.0
-    ports:
-      - "27017:27017"
-    command: ["mongod", "--quiet"]
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: secret
-      MONGO_INITDB_DATABASE: shopify-ecommerce
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - microservices-network
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 5
+
     mongodb:
         image: mongo:7.0
         ports:
