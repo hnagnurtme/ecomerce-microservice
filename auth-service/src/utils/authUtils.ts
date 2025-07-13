@@ -1,8 +1,12 @@
 import jwt from 'jsonwebtoken';
-import appConfig from 'config/app.config';
+import { JwtPayload } from 'jsonwebtoken';
 
 export const createTokenPair = (
-  payload: any,
+  payload: {
+    userId: string;
+    email: string;
+    roles: string[];
+  } & JwtPayload,
   publicKey: string,
   privateKey: string
 ): { accessToken: string; refreshToken: string } => {

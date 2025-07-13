@@ -5,6 +5,7 @@ import logger from 'utils/logger';
 
 export interface CustomError extends Error {
   statusCode?: number;
+  errorCode?: string;
 }
 
 export const errorHandler = (
@@ -16,31 +17,25 @@ export const errorHandler = (
   let response: ApiResponse;
 
   if (error.name === 'ValidationError') {
-    response = ErrorResponse.BADREQUEST(error.message, 'Validation failed');
+    response = ErrorResponse.BADREQUEST(error.message, 'VALIDATION_001');
   } else if (
     error.name === 'MongoServerError' &&
     'code' in error &&
-    (error as { code: number; keyPattern?: Record<string, unknown> }).code ===
-      11000
+    (error as any).code === 11000
   ) {
-    const mongoError = error as {
-      code: number;
-      keyPattern?: Record<string, unknown>;
-    };
-    const field = mongoError.keyPattern
-      ? Object.keys(mongoError.keyPattern)[0]
-      : 'resource';
+    const field = Object.keys((error as any).keyPattern || {})[0] || 'resource';
     response = ErrorResponse.CONFLICT(
       `${field} already exists`,
-      'Duplicate resource'
+      'DUPLICATE_409'
     );
   } else if (error.name === 'CastError') {
-    response = ErrorResponse.BADREQUEST(
-      'Invalid ID format',
-      'Invalid resource ID'
-    );
+    response = ErrorResponse.BADREQUEST('Invalid ID format', 'CAST_400');
   } else if (error.statusCode) {
-    response = ErrorResponse.create(error.message, 'Error', error.statusCode);
+    response = ErrorResponse.create(
+      error.message,
+      error.errorCode || 'COMMON_' + error.statusCode,
+      error.statusCode
+    );
   } else {
     logger.error('Unhandled error:', error);
     response = ErrorResponse.INTERNAL(

@@ -16,7 +16,6 @@ import { convertToIdString, convertToObjectId, PROJECT_CONSTANTS } from 'utils';
 import { KeyTokenService } from './key-token.service';
 import { createTokenPair } from 'utils';
 import { IUser } from 'models/user.model';
-import { IKeyToken } from 'models/key-token.model';
 
 export class AuthService {
   private readonly keyTokenService: KeyTokenService;
@@ -79,6 +78,7 @@ export class AuthService {
       throw ErrorResponse.UNAUTHORIZED(errorMessage.USER_NOT_EXISTS);
     }
     const userId = convertToIdString(String(existingUser._id));
+    const userRoles = existingUser.roles || [];
     /**
      * 3. Compare the provided password with the stored hashed password.
      */
@@ -107,7 +107,7 @@ export class AuthService {
      * 6. Create and return the token pair.
      */
     const tokenPair = await createTokenPair(
-      { userId, email },
+      { userId, email, roles: userRoles },
       publicKey,
       privateKey
     );
