@@ -1,12 +1,9 @@
 import logger from 'utils/logger';
-import axios from 'axios';
-import { LoginDto, LoginResponse, RegisterDto, RegisterKafkaPayload } from 'dtos';
+import { LoginDto, LoginResponse, RegisterDto } from 'dtos';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { ErrorResponse } from 'response';
-import { publishUserRegisterEvent } from 'kafka/producer/user.producer';
 import errorMessage from 'response/htttpResponse/errorMessage';
-import { mapRegiterDtoToKafka } from 'mapper';
 import { convertToIdString, PROJECT_CONSTANTS } from 'utils';
 import { KeyTokenService } from './key-token.service';
 import { createTokenPair } from 'utils';

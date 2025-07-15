@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
     # Infrastructure Services
     zookeeper:
@@ -37,7 +38,6 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: secret
-            MONGO_INITDB_DATABASE: shopify-ecommerce
         volumes:
             - mongodb_data:/data/db
         networks:
@@ -61,7 +61,7 @@ services:
             - USER_SERVICE_URL=http://user-service:3002
             - HOST=mongodb
             - DB_PORT=27017
-            - DB_NAME=shopify-ecommerce
+            - DB_NAME=shopify-ecommerce-gateway
             - DB_USER=root
             - DB_PASS=secret
         depends_on:
@@ -86,7 +86,7 @@ services:
             - DEV_APP_PORT=3001
             - HOST=mongodb
             - DB_PORT=27017
-            - DB_NAME=shopify-ecommerce
+            - DB_NAME=auth-database            
             - DB_USER=root
             - DB_PASS=secret
         depends_on:
@@ -114,7 +114,7 @@ services:
             - DEV_APP_PORT=3002
             - HOST=mongodb
             - DB_PORT=27017
-            - DB_NAME=shopify-ecommerce
+            - DB_NAME=user-database             
             - DB_USER=root
             - DB_PASS=secret
         depends_on:
@@ -129,6 +129,7 @@ services:
             - /app/node_modules
         command: npm run dev
         restart: on-failure
+
 networks:
     microservices-network:
         driver: bridge
