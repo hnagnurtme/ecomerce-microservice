@@ -1,4 +1,3 @@
-import { IKeyToken } from 'models/key-token.model';
 import { IUser } from 'models/user.model';
 
 export class LoginResponse {

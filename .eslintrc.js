@@ -17,12 +17,12 @@ module.exports = {
     ],
     rules: {
         // Prettier formatting
-        'prettier/prettier': ['warn'],
+        'prettier/prettier': ['off'],
 
         // TypeScript specific rules
-        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-        '@typescript-eslint/no-explicit-any': 'warn',
-        '@typescript-eslint/no-empty-function': 'warn',
+        '@typescript-eslint/no-unused-vars': ['off', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
 

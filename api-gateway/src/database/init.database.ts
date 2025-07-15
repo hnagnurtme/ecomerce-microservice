@@ -19,7 +19,7 @@ class Database {
 
     connect(type = 'mongodb') {
         if (nodeEnv === 'development') {
-            mongoose.set('debug', true);
+            mongoose.set('debug', false);
             mongoose.set('debug', { color: true });
         }
         const uri = `${type}://${username}:${password}@${host}:${port}/${name}?authSource=admin`;
