@@ -2,7 +2,7 @@ import { CreateProductDto, ProductType } from 'dtos';
 import { IProduct } from 'models/product.model';
 import { ProductRepository } from 'repositories/product.repository';
 import { ErrorResponse } from 'response';
-import { convertToObjectId } from 'utils';
+import { convertToObjectId, elasticClient } from 'utils';
 import logger from 'utils/logger';
 
 class Product {
@@ -31,6 +31,25 @@ class Product {
         const createdProduct = await this.repo.createProduct(productData);
         if (!createdProduct) {
             throw new Error('Failed to create product');
+        }
+        // Index the product in Elasticsearch
+        try {
+            await elasticClient.index({
+                index: 'products',
+                id: createdProduct._id
+                    ? createdProduct._id.toString()
+                    : (createdProduct._id as string),
+                document: {
+                    productName: createdProduct.productName,
+                    productDescription: createdProduct.productDescription,
+                    productPrice: createdProduct.productPrice,
+                    productType: createdProduct.productType,
+                    productShop: createdProduct.productShop.toString(),
+                },
+            });
+        } catch (error) {
+            logger.error('Failed to index product in Elasticsearch');
+            throw error;
         }
         return createdProduct;
     }
