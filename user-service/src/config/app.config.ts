@@ -21,6 +21,9 @@ const development = {
     kafka: {
         brokers: env('KAFKA_BROKERS', 'localhost:9092'),
     },
+    apiKey: {
+        gateway: env('API_KEY_GATEWAY', '123456789'),
+    },
     nodeEnv: env('NODE_ENV', 'development'),
 };
 const production = {
@@ -43,6 +46,9 @@ const production = {
     },
     kafka: {
         brokers: env('KAFKA_BROKERS', 'localhost:9092'),
+    },
+    apiKey: {
+        gateway: env('API_KEY_GATEWAY', '123456789'),
     },
     nodeEnv: env('NODE_ENV', 'development'),
 };

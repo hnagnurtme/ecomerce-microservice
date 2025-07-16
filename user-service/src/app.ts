@@ -10,6 +10,7 @@ import router from 'routes';
 import { errorHandler, notFound } from 'middleware/errorHandler';
 import { listenUserCreated } from 'kafka/consumer/user.consumer';
 import appConfig from 'config/app.config';
+import { gatewayAPIKeyHandler } from 'utils/authHandler';
 const ROUTER_PREFIX = appConfig.app.prefix || '/api/v1';
 const app = express();
 
@@ -37,6 +38,8 @@ listenUserCreated()
         logger.error('Error listening to user created events:', error);
         process.exit(1);
     });
+// API KEY HANDLER
+app.use(gatewayAPIKeyHandler);
 // ROUTES
 app.use(ROUTER_PREFIX, router);
 
