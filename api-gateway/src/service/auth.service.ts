@@ -1,23 +1,42 @@
 import { HEADER } from 'utils';
 import { NextFunction, Request, Response } from 'express';
 import { ErrorResponse } from 'response';
-import { KeyTokenRepository } from 'repositories';
 import logger from 'utils/logger';
 import JWT, { JwtPayload } from 'jsonwebtoken';
+import { HttpService } from 'utils/httpClient';
+import { IKeyToken } from 'models/key-token.model';
 import { AuthenticatedRequest } from 'request/authenciation.request';
 
 export class AuthService {
-    private readonly keyTokenRepository: KeyTokenRepository;
+    private readonly authService: HttpService;
     constructor() {
         logger.info('AuthService instance created');
-        this.keyTokenRepository = new KeyTokenRepository();
+        this.authService = new HttpService(
+            process.env.AUTH_SERVICE_URL || 'http://auth-service:3001',
+            5000,
+        );
     }
     async authenciation(req: Request, res: Response, next: NextFunction): Promise<void> {
         const userId = req.headers[HEADER.CLIENT_ID] as string;
         if (!userId) {
             throw ErrorResponse.UNAUTHORIZED('Client ID is required');
         }
-        const keyTokenData = await this.keyTokenRepository.findByUserId(userId);
+        const keyTokenResult = await this.authService.get<IKeyToken>(
+            `/api/v1/tokens?userId=${userId}`,
+        );
+        if (!keyTokenResult.success || !keyTokenResult.data) {
+            logger.error('Error fetching key token', {
+                userId,
+                message: keyTokenResult.message,
+                status: keyTokenResult.statusCode,
+                error: keyTokenResult.error,
+            });
+            throw ErrorResponse.BADREQUEST('Failed to fetch key token');
+        }
+        const keyTokenData = {
+            publicKey: keyTokenResult.data.publicKey,
+        } as IKeyToken;
+
         if (!keyTokenData) {
             throw ErrorResponse.UNAUTHORIZED('Invalid Client ID');
         }

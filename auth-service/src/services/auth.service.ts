@@ -1,22 +1,23 @@
 import logger from 'utils/logger';
-import { LoginDto, LoginResponse, RegisterDto, RegisterKafkaPayload } from 'dtos';
+import { LoginDto, LoginResponse, RegisterDto } from 'dtos';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import userRepository from 'repositories/user.repository';
 import { ErrorResponse } from 'response';
-import { publishUserRegisterEvent } from 'kafka/producer/user.producer';
 import errorMessage from 'response/htttpResponse/errorMessage';
-import { mapRegiterDtoToKafka } from 'mapper';
-import { convertToIdString, convertToObjectId, PROJECT_CONSTANTS } from 'utils';
+import { convertToIdString, PROJECT_CONSTANTS } from 'utils';
 import { KeyTokenService } from './key-token.service';
 import { createTokenPair } from 'utils';
 import { IUser } from 'models/user.model';
-
+import { HttpService } from 'utils/httpClient';
 export class AuthService {
     private readonly keyTokenService: KeyTokenService;
+    private readonly userService: HttpService;
     constructor() {
         logger.info('AuthService instance created');
         this.keyTokenService = new KeyTokenService();
+        this.userService = new HttpService(
+            process.env.USER_SERVICE_URL || 'http://user-service:3002',
+        );
     }
 
     async register(userData: RegisterDto): Promise<{ message: string }> {
@@ -25,12 +26,33 @@ export class AuthService {
          */
         const { email, password } = userData;
         /**
-         * 2. Check if the user already exists in the database.
+         * 2. Call api getUserByEmail to check if the user already exists.
          */
-        const existingUser = await userRepository.existsByEmail(email);
-        if (existingUser) {
-            throw ErrorResponse.UNAUTHORIZED(errorMessage.USER_EXISTS);
+
+        const result = await this.userService.get<any>(`/api/v1/users?email=${email}`);
+
+        if (result.success && result.data) {
+            logger.info('User already exists', {
+                email,
+                existingUser: result.data,
+            });
+
+            throw ErrorResponse.CONFLICT(errorMessage.USER_EXISTS);
         }
+
+        if (!result.success && result.statusCode !== 404) {
+            logger.error('Error checking user existence', {
+                email,
+                message: result.message,
+                status: result.statusCode,
+                error: result.error,
+            });
+
+            throw ErrorResponse.INTERNAL(errorMessage.INTERNAL_SERVER_ERROR);
+        }
+
+        logger.info('User does not exist, proceeding with registration', { email });
+
         /**
          * 3. Hash the password with bcrypt.
          */
@@ -43,12 +65,35 @@ export class AuthService {
         /**
          * 4. Send message kafka to create a new user.
          */
+        // Gửi request tạo user mới
+        const createUserResult = await this.userService.post<any>('/api/v1/users', userData);
 
-        publishUserRegisterEvent(mapRegiterDtoToKafka(userData) as RegisterKafkaPayload);
+        // Xử lý kết quả
+        if (!createUserResult.success) {
+            logger.error('Failed to create user in user-service', {
+                message: createUserResult.message,
+                status: createUserResult.statusCode,
+                error: createUserResult.error,
+            });
+
+            if (createUserResult.statusCode === 409) {
+                throw ErrorResponse.CONFLICT(createUserResult.message);
+            }
+
+            throw ErrorResponse.INTERNAL(
+                createUserResult.message || errorMessage.INTERNAL_SERVER_ERROR,
+            );
+        }
+
+        // Thành công
+        logger.info('Created user in user-service', {
+            userId: createUserResult.data?._id,
+            email: createUserResult.data?.email,
+        });
+
         /**
          * 5. Return the user information.
          */
-        logger.info('User registered successfully', { email });
 
         return {
             message: 'User registered successfully',
@@ -61,12 +106,31 @@ export class AuthService {
          */
         const { email, password } = userData;
         /**
-         * 2. Check if the user exists in the database.
+         * 2. Check if the user exists
          */
-        const existingUser = await userRepository.findByEmail(email);
-        if (!existingUser) {
-            throw ErrorResponse.UNAUTHORIZED(errorMessage.USER_NOT_EXISTS);
+
+        const userResult = await this.userService.get<IUser>(`/api/v1/users?email=${email}`);
+
+        // Nếu không tìm thấy → throw lỗi
+        if (!userResult.success || !userResult.data) {
+            logger.warn('User not found during login', {
+                email,
+                statusCode: userResult.statusCode,
+                error: userResult.error,
+            });
+
+            throw ErrorResponse.NOTFOUND(errorMessage.USER_NOT_EXISTS);
         }
+
+        // Nếu tìm thấy → trích thông tin user
+        const existingUser = {
+            _id: userResult.data._id,
+            email: userResult.data.email,
+            name: userResult.data.name,
+            roles: userResult.data.roles,
+            password: userResult.data.password, // dùng để verify mật khẩu
+        } as IUser;
+
         const userId = convertToIdString(String(existingUser._id));
         const userRoles = existingUser.roles || [];
         /**

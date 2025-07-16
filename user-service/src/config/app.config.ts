@@ -13,7 +13,7 @@ const development = {
     db: {
         host: env('HOST', 'localhost'),
         port: env('DB_PORT', 27017),
-        database: env('DB_NAME', 'shopify-ecommerce'),
+        database: env('DB_NAME', 'user-database'),
         username: env('DB_USER', 'root'),
         password: env('DB_PASS', 'secret'),
         dialect: env('DB_DIALECT', 'mongodb'),
@@ -36,7 +36,7 @@ const production = {
     db: {
         host: env('HOST', 'localhost'),
         port: env('DB_PORT', 27017),
-        database: env('DB_NAME', 'shopify-ecommerce'),
+        database: env('DB_NAME', 'user-database'),
         username: env('DB_USER', 'root'),
         password: env('DB_PASS', 'secret'),
         dialect: env('DB_DIALECT', 'mongodb'),
