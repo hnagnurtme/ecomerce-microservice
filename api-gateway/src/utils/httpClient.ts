@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { ApiResponse } from 'response';
 import logger from './logger';
-
+import appConfig from 'config/app.config';
+const gatewayApiKey = appConfig.apiKey.gateway as string;
 interface ApiResponseData<T> {
     success: boolean;
     message: string;
@@ -27,7 +28,7 @@ export class HttpService {
             config.headers = config.headers || {};
             config.headers['Content-Type'] = 'application/json';
             config.headers['Accept'] = 'application/json';
-
+            config.headers['x-gateway-api-key'] = gatewayApiKey;
             return config;
         });
 

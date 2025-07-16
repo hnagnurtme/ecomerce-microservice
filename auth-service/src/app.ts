@@ -33,7 +33,7 @@ initKafka()
 // INIT LOGGER
 app.use(requestLogger);
 // API KEY HANDLER
-// app.use(gatewayAPIKeyHandler);
+app.use(gatewayAPIKeyHandler);
 // ROUTES
 app.use(ROUTER_PREFIX, router);
 
