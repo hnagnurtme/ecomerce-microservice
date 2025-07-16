@@ -1,6 +1,8 @@
-import keyTokenModel from 'models/key-token.model';
+import keyTokenModel, { IKeyToken } from 'models/key-token.model';
+import keyTokenRepository from 'repositories/key-token.repository';
+import { ErrorResponse } from 'response';
 import logger from 'utils/logger';
-
+import { getInfoData } from 'utils';
 export class KeyTokenService {
     constructor() {
         logger.info('KeyTokenService instance created');
@@ -11,29 +13,34 @@ export class KeyTokenService {
         privateKey: string,
         refreshToken: string | null = null,
     ): Promise<string> {
-        try {
-            const filter = { user: userId };
-            const update = {
-                publicKey,
-                privateKey,
-                refreshToken,
-                refreshTokenUsed: [],
-            };
-            const options = {
-                upsert: true,
-                new: true,
-            };
-
-            const keyToken = await keyTokenModel.findOneAndUpdate(filter, update, options);
-
-            if (!keyToken) {
-                throw new Error('Failed to generate key token');
-            }
-            logger.info('Key token generated successfully', { userId });
-            return keyToken.publicKey;
-        } catch (error) {
-            logger.error('Error generating key token', { error, userId });
-            throw new Error('Failed to generate key token');
+        const createdToken = await keyTokenRepository.createKeyToken(
+            userId,
+            publicKey,
+            privateKey,
+            refreshToken,
+        );
+        if (!createdToken) {
+            logger.error('Failed to create key token', { userId });
+            throw ErrorResponse.INTERNAL('Failed to create key token');
         }
+        logger.info('Key token created successfully', { userId, publicKey });
+        return createdToken;
+    }
+
+    async getKeyTokenByUserId(userId: string): Promise<Partial<IKeyToken>> {
+        if (!userId) {
+            logger.warn('User ID is required to retrieve key token');
+            throw ErrorResponse.BADREQUEST('User ID is required');
+        }
+        const keyToken = await keyTokenRepository.findByUserId(userId);
+        if (!keyToken) {
+            logger.warn('Key token not found for user', { userId });
+            throw ErrorResponse.NOTFOUND('Key token not found');
+        }
+        logger.info('Key token retrieved successfully', { userId });
+        return getInfoData({
+            fields: ['publicKey'],
+            object: keyToken,
+        });
     }
 }
