@@ -59,14 +59,6 @@ services:
             - NODE_ENV=development
             - AUTH_SERVICE_URL=http://auth-service:3001
             - USER_SERVICE_URL=http://user-service:3002
-            - HOST=mongodb
-            - DB_PORT=27017
-            - DB_NAME=shopify-ecommerce-gateway
-            - DB_USER=root
-            - DB_PASS=secret
-        depends_on:
-            mongodb:
-                condition: service_healthy
         networks:
             - microservices-network
         volumes:
@@ -126,6 +118,33 @@ services:
             - microservices-network
         volumes:
             - ./user-service:/app
+            - /app/node_modules
+        command: npm run dev
+        restart: on-failure
+    catalog-service:
+        build:
+            context: ./catalog-service
+            dockerfile: dockerfile
+        ports:
+            - '3003:3003'
+        environment:
+            - NODE_ENV=development
+            - KAFKA_BROKERS=kafka:29092
+            - DEV_APP_PORT=3003
+            - HOST=mongodb
+            - DB_PORT=27017
+            - DB_NAME=catalog-database             
+            - DB_USER=root
+            - DB_PASS=secret
+        depends_on:
+            kafka:
+                condition: service_healthy
+            mongodb:
+                condition: service_healthy
+        networks:
+            - microservices-network
+        volumes:
+            - ./catalog-service:/app
             - /app/node_modules
         command: npm run dev
         restart: on-failure
