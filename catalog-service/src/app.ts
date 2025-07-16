@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import express from 'express';
-import process from 'process';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import initDatabase from 'database/init.database';
@@ -21,8 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 // INIT DATABASE
 initDatabase.connect();
 
-// // API KEY HANDLER
-// app.use(gatewayAPIKeyHandler);
+// API KEY HANDLER
+app.use(gatewayAPIKeyHandler);
 // ROUTES
 app.use(ROUTER_PREFIX, router);
 

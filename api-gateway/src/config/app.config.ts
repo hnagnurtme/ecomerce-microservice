@@ -17,6 +17,8 @@ const development = {
     nodeEnv: env('NODE_ENV', 'development'),
     serviceUrls: {
         AUTH_SERVICE_URL: env('AUTH_SERVICE_URL', 'http://auth-service:3001'),
+        USER_SERVICE_URL: env('USER_SERVICE_URL', 'http://user-service:3002'),
+        CATALOG_SERVICE_URL: env('CATALOG_SERVICE_URL', 'http://catalog-service:3003'),
     },
     apiKey: {
         gateway: env('API_KEY_GATEWAY', '123456789'),
@@ -38,6 +40,8 @@ const production = {
     },
     serviceUrls: {
         AUTH_SERVICE_URL: env('AUTH_SERVICE_URL', 'http://auth-service:3001'),
+        USER_SERVICE_URL: env('USER_SERVICE_URL', 'http://user-service:3002'),
+        CATALOG_SERVICE_URL: env('CATALOG_SERVICE_URL', 'http://catalog-service:3003'),
     },
     apiKey: {
         gateway: env('API_KEY_GATEWAY', '123456789'),
