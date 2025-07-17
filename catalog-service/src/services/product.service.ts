@@ -4,7 +4,7 @@ import { ProductRepository } from 'repositories/product.repository';
 import { ErrorResponse } from 'response';
 import { convertToObjectId, elasticClient } from 'utils';
 import logger from 'utils/logger';
-
+import { KafkaProducer } from 'kafka/KafkaProducer';
 class Product {
     protected readonly repo: ProductRepository;
     protected readonly dto: CreateProductDto;
@@ -114,8 +114,20 @@ export class ProductServiceFactory {
 
         const productInstance = new ProductClass(productData);
         const result = await productInstance.createProduct();
-
         logger.info(`[Factory] Created product of type: ${productType}`);
+        try {
+            await KafkaProducer.publish({
+                topic: 'product.created',
+                event: 'product.created',
+                data: {
+                    productId: result._id,
+                    productName: result.productName,
+                    productType: result.productType,
+                },
+            });
+        } catch (error) {
+            logger.error('Failed to send Kafka message', error);
+        }
         return result;
     }
 }
