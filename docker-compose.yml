@@ -30,21 +30,6 @@ services:
             interval: 10s
             timeout: 10s
             retries: 5
-    kafka-ui:
-      image: provectuslabs/kafka-ui:latest
-      container_name: kafka-ui
-      ports:
-        - "8080:8080"
-      environment:
-        - KAFKA_CLUSTERS_0_NAME=local-kafka
-        - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-        - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
-      depends_on:
-        - kafka
-        - zookeeper
-      networks:
-        - microservices-network
-
 
     mongodb:
         image: mongo:7.0
@@ -163,6 +148,34 @@ services:
             - /app/node_modules
         command: npm run dev
         restart: on-failure
+    inventory-service:
+        build:
+            context: ./inventory-service
+            dockerfile: dockerfile
+        ports:
+            - '3004:3004'
+        environment:
+            - NODE_ENV=development
+            - KAFKA_BROKERS=kafka:29092
+            - DEV_APP_PORT=3004
+            - HOST=mongodb
+            - DB_PORT=27017
+            - DB_NAME=inventory-database             
+            - DB_USER=root
+            - DB_PASS=secret
+        depends_on:
+            kafka:
+                condition: service_healthy
+            mongodb:
+                condition: service_healthy
+        networks:
+            - microservices-network
+        volumes:
+            - ./inventory-service:/app
+            - /app/node_modules
+        command: npm run dev
+        restart: on-failure
+
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
