@@ -8,6 +8,7 @@ import {
     ValidateNested,
     Min,
     Max,
+    IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -55,8 +56,8 @@ export class CreateProductDto {
     })
     productType!: ProductType;
 
-    @IsOptional()
-    productShop?: string;
+    @IsNotEmpty({ message: 'Product shop is required' })
+    productShop!: string;
 
     @IsObject({ message: 'Product attributes must be an object' })
     productAttributes!: Record<string, any>;

@@ -4,7 +4,8 @@ import { ProductRepository } from 'repositories/product.repository';
 import { ErrorResponse } from 'response';
 import { convertToObjectId, elasticClient } from 'utils';
 import logger from 'utils/logger';
-import { KafkaProducer } from 'kafka/KafkaProducer';
+import { ProductProducer } from 'kafka/producer/product.producer';
+import { mapIProductCreatedToKafkaPayload } from 'mapper/catalog.mapper';
 class Product {
     protected readonly repo: ProductRepository;
     protected readonly dto: CreateProductDto;
@@ -32,7 +33,6 @@ class Product {
         if (!createdProduct) {
             throw new Error('Failed to create product');
         }
-        // Index the product in Elasticsearch
         try {
             await elasticClient.index({
                 index: 'products',
@@ -116,15 +116,16 @@ export class ProductServiceFactory {
         const result = await productInstance.createProduct();
         logger.info(`[Factory] Created product of type: ${productType}`);
         try {
-            await KafkaProducer.publish({
-                topic: 'product.created',
-                event: 'product.created',
-                data: {
-                    productId: result._id,
-                    productName: result.productName,
-                    productType: result.productType,
-                },
-            });
+            const totalStock = productData.productVariations?.reduce(
+                (sum, variation) => sum + (variation.stock || 0),
+                0,
+            );
+            const kafkaPayload = mapIProductCreatedToKafkaPayload(result);
+            kafkaPayload.stock = totalStock || result.productQuantity;
+            await ProductProducer.publishProductCreated(kafkaPayload);
+            logger.info(
+                `[Factory] Published product created event for productId: ${kafkaPayload.productId}`,
+            );
         } catch (error) {
             logger.error('Failed to send Kafka message', error);
         }
