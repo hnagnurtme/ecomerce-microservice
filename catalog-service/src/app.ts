@@ -8,6 +8,7 @@ import router from 'routes';
 import { errorHandler, notFound } from 'middleware/errorHandler';
 import appConfig from 'config/app.config';
 import { gatewayAPIKeyHandler } from 'utils/authHandler';
+import { initKafka } from 'kafka/kafkaClient';
 const ROUTER_PREFIX = appConfig.app.prefix || '/api/v1';
 const app = express();
 
@@ -19,6 +20,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // INIT DATABASE
 initDatabase.connect();
+initKafka()
+    .then(() => logger.info('Kafka initialized successfully'))
+    .catch((error) => {
+        logger.error('Error initializing Kafka:', error);
+        process.exit(1);
+    });
 
 // API KEY HANDLER
 app.use(gatewayAPIKeyHandler);
