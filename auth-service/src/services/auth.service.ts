@@ -128,7 +128,7 @@ export class AuthService {
             email: userResult.data.email,
             name: userResult.data.name,
             roles: userResult.data.roles,
-            password: userResult.data.password, // dùng để verify mật khẩu
+            password: userResult.data.password,
         } as IUser;
 
         const userId = convertToIdString(String(existingUser._id));
@@ -177,7 +177,7 @@ export class AuthService {
         if (!keyTokenStore) {
             throw ErrorResponse.INTERNAL(errorMessage.INTERNAL_SERVER_ERROR);
         }
-        logger.info('Keytoken', { userId, publicKey, privateKey, refreshToken }, keyTokenStore);
+        logger.info(publicKey, privateKey);
 
         /**
          * 7. Return the IUser and IKeyToken in LoginResponse.
