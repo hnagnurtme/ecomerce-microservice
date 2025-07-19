@@ -175,7 +175,33 @@ services:
             - /app/node_modules
         command: npm run dev
         restart: on-failure
-
+    cart-service:
+        build:
+            context: ./cart-service
+            dockerfile: dockerfile
+        ports:
+            - '3005:3005'
+        environment:
+            - NODE_ENV=development
+            - KAFKA_BROKERS=kafka:29092
+            - DEV_APP_PORT=3005
+            - HOST=mongodb
+            - DB_PORT=27017
+            - DB_NAME=cart-database             
+            - DB_USER=root
+            - DB_PASS=secret
+        depends_on:
+            kafka:
+                condition: service_healthy
+            mongodb:
+                condition: service_healthy
+        networks:
+            - microservices-network
+        volumes:
+            - ./cart-service:/app
+            - /app/node_modules
+        command: npm run dev
+        restart: on-failure
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
