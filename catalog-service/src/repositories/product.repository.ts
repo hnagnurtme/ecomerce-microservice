@@ -16,4 +16,16 @@ export class ProductRepository {
     async createFurniture(furnitureData: Partial<IFurniture>): Promise<IFurniture> {
         return await furnitureModel.create(furnitureData);
     }
+
+    async findProductById(productId: string): Promise<IProduct | null> {
+        return await productModel.findById(productId).lean();
+    }
+
+    async findAllProducts(limit: number, page: number): Promise<IProduct[]> {
+        return await productModel
+            .find()
+            .limit(limit)
+            .skip((page - 1) * limit)
+            .lean();
+    }
 }

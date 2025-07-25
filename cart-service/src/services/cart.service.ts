@@ -20,12 +20,12 @@ export class CartService {
 
         const { productId, quantity, old_quantity } = shop_order_ids[0].item_products[0];
 
-        // const result = await this.productService.get<any>(`/api/v1/products/${productId}`);
+        const result = await this.productService.get<any>(`/api/v1/products/${productId}`);
 
-        // if (!result.success || !result.data) {
-        //     logger.error('Product not found', { productId });
-        //     throw ErrorResponse.NOTFOUND('Product not found');
-        // }
+        if (!result.success || !result.data) {
+            logger.error('Product not found', { productId });
+            throw ErrorResponse.NOTFOUND('Product not found');
+        }
         // Check if already have cart
         const existingCart = await this.cartRepository.findCartByUserId(userId);
         if (!existingCart) {

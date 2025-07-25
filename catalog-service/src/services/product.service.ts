@@ -131,6 +131,24 @@ export class ProductServiceFactory {
         }
         return result;
     }
+
+    async getProductById(productId: string): Promise<IProduct | null> {
+        const product = await new ProductRepository().findProductById(productId);
+        if (!product) {
+            throw ErrorResponse.NOTFOUND('Product not found');
+        }
+        return product;
+    }
+
+    async getAllProducts(limit: string, page: string): Promise<IProduct[]> {
+        const parsedLimit = parseInt(limit, 10) || 10;
+        const parsedPage = parseInt(page, 10) || 1;
+        const products = await new ProductRepository().findAllProducts(parsedLimit, parsedPage);
+        if (!products || products.length === 0) {
+            throw ErrorResponse.NOTFOUND('No products found');
+        }
+        return products;
+    }
 }
 
 ProductServiceFactory.registerProductType('Clothing', Clothing);

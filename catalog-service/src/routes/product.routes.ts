@@ -12,4 +12,8 @@ productRouter.post(
     asyncHandler(productController.createProduct.bind(productController)),
 );
 
+productRouter.get('/:id', asyncHandler(productController.getProductById.bind(productController)));
+
+productRouter.get('', asyncHandler(productController.getAllProducts.bind(productController)));
+
 export default productRouter;
