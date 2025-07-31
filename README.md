@@ -1,23 +1,22 @@
 # E-commerce Microservice Architecture
 
-A modern, scalable e-commerce system built with Node.js, TypeScript, Kafka, MongoDB, and
-Elasticsearch, following a microservices architecture.
+Hệ thống microservice cho ứng dụng thương mại điện tử được xây dựng với Node.js, TypeScript và các
+công nghệ hiện đại bao gồm Kafka, MongoDB, và Elasticsearch.
 
-## 📋 Table of Contents
+## 📋 Mục lục
 
-- [System Architecture](#system-architecture)
-- [Technologies Used](#technologies-used)
-- [Project Structure](#project-structure)
-- [Installation Guide](#installation-guide)
-- [Running the Application](#running-the-application)
+- [Kiến trúc hệ thống](#kiến-trúc-hệ-thống)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Cấu trúc dự án](#cấu-trúc-dự-án)
+- [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
+- [Chạy ứng dụng](#chạy-ứng-dụng)
 - [Services](#services)
 - [API Documentation](#api-documentation)
 - [Monitoring & Logging](#monitoring--logging)
 - [Development Workflow](#development-workflow)
 - [Troubleshooting](#troubleshooting)
-- [License](#license)
 
-## 🏗️ System Architecture
+## 🏗️ Kiến trúc hệ thống
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -52,162 +51,148 @@ Elasticsearch, following a microservices architecture.
     └─────────────────┘               └─────────────────┘               └─────────────────┘
 ```
 
-## 🚀 Technologies Used
+## 🚀 Công nghệ sử dụng
 
-**Backend:**
+### Backend Framework
 
-- Node.js (JavaScript runtime)
-- Express.js (Web framework)
-- TypeScript (Type-safe JavaScript)
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **TypeScript** - Type-safe JavaScript
 
-**Database & Search:**
+### Database & Search
 
-- MongoDB (Document database)
-- Mongoose (MongoDB ODM)
-- Elasticsearch (Search engine)
+- **MongoDB** - Document database
+- **Elasticsearch** - Search engine
+- **Mongoose** - MongoDB ODM
 
-**Messaging:**
+### Message Broker
 
-- Apache Kafka (Event streaming platform)
-- KafkaJS (Kafka client for Node.js)
+- **Apache Kafka** - Event streaming platform
+- **KafkaJS** - Kafka client for Node.js
 
-**Monitoring & Logging:**
+### Monitoring & Visualization
 
-- Kibana (Data visualization)
-- Kafka UI (Kafka management interface)
-- Winston (Logging library)
+- **Kibana** - Data visualization
+- **Kafka UI** - Kafka management interface
+- **Winston** - Logging library
 
-**Development Tools:**
+### Development Tools
 
-- Docker & Docker Compose (Containerization)
-- Prettier (Code formatting)
-- ESLint (Code linting)
-- Husky (Git hooks)
-- Commitlint (Commit message linting)
+- **Docker & Docker Compose** - Containerization
+- **Prettier** - Code formatting
+- **ESLint** - Code linting
+- **Husky** - Git hooks
+- **Commitlint** - Commit message linting
 
-ecommerce-microservice/ ├── api-gateway/ # API Gateway - Route requests to services │ ├── src/ │ │
-├── config/ # Configuration files │ │ ├── middleware/ # Custom middleware │ │ ├── proxies/ # Service
-proxy configurations │ │ ├── routes/ # API routes │ │ └── utils/ # Utility functions │ ├──
-dockerfile # Docker configuration │ └── package.json ├── auth-service/ # Authentication &
-Authorization Service │ ├── src/ │ │ ├── controllers/ # Request handlers │ │ ├── models/ # Database
-models │ │ ├── services/ # Business logic │ │ ├── kafka/ # Kafka producers/consumers │ │ ├──
-routes/ # API routes │ │ └── utils/ # Utility functions │ ├── dockerfile │ └── package.json ├──
-user-service/ # User Management Service │ ├── src/ │ │ ├── controllers/ # Request handlers │ │ ├──
-models/ # Database models │ │ ├── services/ # Business logic │ │ ├── kafka/ # Kafka
-producers/consumers │ │ └── routes/ # API routes │ ├── dockerfile │ └── package.json ├──
-catalog-service/ # Product Catalog Service │ ├── src/ │ │ ├── controllers/ # Request handlers │ │
-├── models/ # Database models │ │ ├── services/ # Business logic │ │ ├── kafka/ # Kafka
-producers/consumers │ │ ├── utils/ # Utility functions (including Elasticsearch) │ │ └── routes/ #
-API routes │ ├── dockerfile │ └── package.json ├── docker-compose.yml # Docker services
-configuration ├── package.json # Root package configuration ├── .prettierrc # Prettier configuration
-├── .eslintrc.js # ESLint configuration ├── commitlint.config.js # Commit message rules └──
-tsconfig.base.json # Shared TypeScript configuration
-
-## 📁 Project Structure
+## 📁 Cấu trúc dự án
 
 ```
 ecommerce-microservice/
-├── api-gateway/              # API Gateway - routes requests to services
+├── api-gateway/              # API Gateway - Route requests to services
 │   ├── src/
-│   │   ├── config/           # Configuration files
-│   │   ├── middleware/       # Custom middleware
-│   │   ├── proxies/          # Service proxy configs
-│   │   ├── routes/           # API routes
-│   │   └── utils/            # Utility functions
-│   ├── dockerfile            # Docker configuration
+│   │   ├── config/          # Configuration files
+│   │   ├── middleware/      # Custom middleware
+│   │   ├── proxies/         # Service proxy configurations
+│   │   ├── routes/          # API routes
+│   │   └── utils/           # Utility functions
+│   ├── dockerfile           # Docker configuration
 │   └── package.json
-├── auth-service/             # Authentication & Authorization Service
+├── auth-service/            # Authentication & Authorization Service
 │   ├── src/
-│   │   ├── controllers/      # Request handlers
-│   │   ├── models/           # Database models
-│   │   ├── services/         # Business logic
-│   │   ├── kafka/            # Kafka producers/consumers
-│   │   ├── routes/           # API routes
-│   │   └── utils/            # Utility functions
+│   │   ├── controllers/     # Request handlers
+│   │   ├── models/          # Database models
+│   │   ├── services/        # Business logic
+│   │   ├── kafka/           # Kafka producers/consumers
+│   │   ├── routes/          # API routes
+│   │   └── utils/           # Utility functions
 │   ├── dockerfile
 │   └── package.json
-├── user-service/             # User Management Service
+├── user-service/            # User Management Service
 │   ├── src/
-│   │   ├── controllers/      # Request handlers
-│   │   ├── models/           # Database models
-│   │   ├── services/         # Business logic
-│   │   ├── kafka/            # Kafka producers/consumers
-│   │   └── routes/           # API routes
+│   │   ├── controllers/     # Request handlers
+│   │   ├── models/          # Database models
+│   │   ├── services/        # Business logic
+│   │   ├── kafka/           # Kafka producers/consumers
+│   │   └── routes/          # API routes
 │   ├── dockerfile
 │   └── package.json
-├── catalog-service/          # Product Catalog Service
+├── catalog-service/         # Product Catalog Service
 │   ├── src/
-│   │   ├── controllers/      # Request handlers
-│   │   ├── models/           # Database models
-│   │   ├── services/         # Business logic
-│   │   ├── kafka/            # Kafka producers/consumers
-│   │   ├── utils/            # Utility functions (Elasticsearch)
-│   │   └── routes/           # API routes
+│   │   ├── controllers/     # Request handlers
+│   │   ├── models/          # Database models
+│   │   ├── services/        # Business logic
+│   │   ├── kafka/           # Kafka producers/consumers
+│   │   ├── utils/           # Utility functions (including Elasticsearch)
+│   │   └── routes/          # API routes
 │   ├── dockerfile
 │   └── package.json
-├── docker-compose.yml        # Docker Compose configuration
-├── package.json              # Root package configuration
-├── .prettierrc               # Prettier configuration
-├── .eslintrc.js              # ESLint configuration
-├── commitlint.config.js      # Commit message rules
-└── tsconfig.base.json        # Shared TypeScript config
+├── docker-compose.yml       # Docker services configuration
+├── package.json            # Root package configuration
+├── .prettierrc             # Prettier configuration
+├── .eslintrc.js            # ESLint configuration
+├── commitlint.config.js    # Commit message rules
+└── tsconfig.base.json      # Shared TypeScript configuration
 ```
 
-## 🛠️ Installation Guide
+## 🛠️ Hướng dẫn cài đặt
 
-### Prerequisites
+### Yêu cầu hệ thống
 
-- Node.js >= 18.0.0
-- Docker >= 20.0.0
-- Docker Compose >= 2.0.0
-- Git
+- **Node.js** >= 18.0.0
+- **Docker** >= 20.0.0
+- **Docker Compose** >= 2.0.0
+- **Git**
 
-### Steps
+### Cài đặt
 
-1. **Clone the repository:**
+1. **Clone repository:**
+
     ```bash
     git clone https://github.com/hnagnurtme/ecomerce-microservice.git
     cd ecomerce-microservice
     ```
-2. **Install root dependencies:**
+
+2. **Cài đặt dependencies:**
+
     ```bash
     npm install
     ```
-3. **Install dependencies for each service:**
+
+3. **Cài đặt dependencies cho từng service:**
 
     ```bash
-    # Install for all services
+    # Cài đặt cho tất cả services
     npm run install:all
 
-    # Or install individually
+    # Hoặc cài đặt riêng cho từng service
     cd auth-service && npm install
     cd ../user-service && npm install
     cd ../catalog-service && npm install
     cd ../api-gateway && npm install
     ```
 
-## 🚀 Running the Application
+## 🚀 Chạy ứng dụng
 
-### Using Docker Compose (Recommended)
+### Sử dụng Docker Compose (Khuyến nghị)
 
 ```bash
-# Start all services
+# Khởi động tất cả services
 docker-compose up -d
 
-# Start and view logs
+# Khởi động và theo dõi logs
 docker-compose up
 
-# Start specific services
+# Khởi động service cụ thể
 docker-compose up auth-service user-service
 
-# Stop all services
+# Dừng tất cả services
 docker-compose down
 
-# Stop and remove volumes
+# Dừng và xóa volumes
 docker-compose down -v
 ```
 
-### Running Services Individually
+### Chạy từng service riêng lẻ
 
 ```bash
 # Auth Service
@@ -231,69 +216,69 @@ npm run dev
 
 ### API Gateway (Port 3000)
 
-- **Purpose:** Routes requests, handles authentication middleware, and rate limiting.
-- **Base URL:** `http://localhost:3000`
-- **Health Check:** `GET /health`
+- **Chức năng**: Routing requests, Authentication middleware, Rate limiting
+- **Endpoint**: `http://localhost:3000`
+- **Health Check**: `GET /health`
 
 ### Auth Service (Port 3001)
 
-- **Purpose:** Handles user authentication, JWT token management, and user registration/login.
-- **Database:** MongoDB (`auth-database`)
-- **Kafka Topics:** User events
-- **Endpoints:**
-    - `POST /auth/register` – Register a new user
-    - `POST /auth/login` – User login
-    - `POST /auth/refresh` – Refresh JWT token
-    - `GET /auth/profile` – Retrieve user profile
+- **Chức năng**: User authentication, JWT token management, User registration/login
+- **Database**: MongoDB (auth-database)
+- **Kafka Topics**: User events
+- **Endpoints**:
+    - `POST /auth/register` - User registration
+    - `POST /auth/login` - User login
+    - `POST /auth/refresh` - Refresh token
+    - `GET /auth/profile` - Get user profile
 
 ### User Service (Port 3002)
 
-- **Purpose:** Manages user profiles and user data operations.
-- **Database:** MongoDB (`user-database`)
-- **Kafka Topics:** User profile events
-- **Endpoints:**
-    - `GET /users/profile` – Get user profile
-    - `PUT /users/profile` – Update user profile
-    - `DELETE /users/profile` – Delete user profile
+- **Chức năng**: User profile management, User data operations
+- **Database**: MongoDB (user-database)
+- **Kafka Topics**: User profile events
+- **Endpoints**:
+    - `GET /users/profile` - Get user profile
+    - `PUT /users/profile` - Update user profile
+    - `DELETE /users/profile` - Delete user profile
 
 ### Catalog Service (Port 3003)
 
-- **Purpose:** Product catalog management and search functionality.
-- **Database:** MongoDB (`catalog-database`)
-- **Search Engine:** Elasticsearch
-- **Kafka Topics:** Product events
-- **Endpoints:**
-    - `GET /products` – Get products list
-    - `POST /products` – Create product
-    - `GET /products/:id` – Get product details
-    - `PUT /products/:id` – Update product
-    - `DELETE /products/:id` – Delete product
-    - `GET /products/search` – Search products
+- **Chức năng**: Product catalog management, Search functionality
+- **Database**: MongoDB (catalog-database)
+- **Search Engine**: Elasticsearch
+- **Kafka Topics**: Product events
+- **Endpoints**:
+    - `GET /products` - Get products list
+    - `POST /products` - Create product
+    - `GET /products/:id` - Get product details
+    - `PUT /products/:id` - Update product
+    - `DELETE /products/:id` - Delete product
+    - `GET /products/search` - Search products
 
 ### Infrastructure Services
 
 #### MongoDB (Port 27017)
 
-- **Purpose:** Document database for all services
-- **Credentials:** root/secret
-- **Databases:** auth-database, user-database, catalog-database
+- **Database**: Document database cho tất cả services
+- **Credentials**: root/secret
+- **Databases**: auth-database, user-database, catalog-database
 
 #### Apache Kafka (Port 9092)
 
-- **Purpose:** Event streaming between services
-- **Zookeeper:** Service coordination
-- **Kafka UI:** `http://localhost:8080`
+- **Message Broker**: Event streaming giữa các services
+- **Zookeeper**: Service coordination
+- **Kafka UI**: `http://localhost:8080`
 
 #### Elasticsearch (Port 9200)
 
-- **Purpose:** Full-text search for catalog service
-- **Version:** 8.13.0
-- **Endpoint:** `http://localhost:9200`
+- **Search Engine**: Full-text search cho catalog service
+- **Version**: 8.13.0
+- **Endpoint**: `http://localhost:9200`
 
 #### Kibana (Port 5601)
 
-- **Purpose:** Data visualization for Elasticsearch
-- **Dashboard:** `http://localhost:5601`
+- **Visualization**: Data visualization cho Elasticsearch
+- **Dashboard**: `http://localhost:5601`
 
 ## 📚 API Documentation
 
@@ -318,30 +303,28 @@ npm run dev
 
 ### Logs
 
-- **Application logs:** Winston logging in each service
-- **Container logs:** `docker-compose logs [service-name]`
-- **Real-time logs:** `docker-compose logs -f [service-name]`
+- **Application logs**: Winston logging trong từng service
+- **Container logs**: `docker-compose logs [service-name]`
+- **Real-time logs**: `docker-compose logs -f [service-name]`
 
 ### Health Checks
 
-- **MongoDB:** Connection ping
-- **Kafka:** Topic listing
-- **Elasticsearch:** Cluster health
+- **MongoDB**: Connection ping
+- **Kafka**: Topic listing
+- **Elasticsearch**: Cluster health
 
 ### Monitoring Endpoints
 
-- **Kafka UI:** `http://localhost:8080`
-- **Kibana:** `http://localhost:5601`
-- **Elasticsearch:** `http://localhost:9200/_cluster/health`
-
-docs: update API documentation
+- **Kafka UI**: `http://localhost:8080`
+- **Kibana**: `http://localhost:5601`
+- **Elasticsearch**: `http://localhost:9200/_cluster/health`
 
 ## 💻 Development Workflow
 
 ### Code Quality Tools
 
 ```bash
-# Lint all code
+# Lint tất cả code
 npm run lint
 
 # Fix linting issues
@@ -356,34 +339,38 @@ npm run type-check
 
 ### Git Workflow
 
-1. **Create a new branch:**
+1. **Tạo branch mới:**
+
     ```bash
     git checkout -b feature/your-feature-name
     ```
+
 2. **Development:**
 
     ```bash
-    # Start required services
+    # Chạy services cần thiết
     docker-compose up -d mongodb kafka elasticsearch
 
-    # Start developing your service
+    # Chạy service đang phát triển
     cd [service-name]
     npm run dev
     ```
 
 3. **Commit changes:**
+
     ```bash
     git add .
-    npm run commit  # Interactive commit with Commitizen
+    npm run commit  # Interactive commit với Commitizen
     ```
-4. **Push and create Pull Request:**
+
+4. **Push và tạo Pull Request:**
     ```bash
     git push origin feature/your-feature-name
     ```
 
 ### Commit Message Format
 
-This project uses [Conventional Commits](https://www.conventionalcommits.org/):
+Dự án sử dụng [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 <type>(<scope>): <description>
@@ -395,13 +382,13 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 
 **Types:**
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation update
-- `style`: Formatting, missing semicolons, etc
-- `refactor`: Code refactoring
+- `feat`: Tính năng mới
+- `fix`: Sửa lỗi
+- `docs`: Cập nhật tài liệu
+- `style`: Formatting, missing semi colons, etc
+- `refactor`: Refactoring code
 - `test`: Adding tests
-- `chore`: Build tasks, package updates, etc
+- `chore`: Updating build tasks, packages, etc
 
 **Examples:**
 
@@ -416,10 +403,10 @@ refactor(user): improve user service architecture
 
 ### Common Issues
 
-#### 1. Service not starting
+#### 1. Service không khởi động được
 
 ```bash
-# Check logs
+# Kiểm tra logs
 docker-compose logs [service-name]
 
 # Restart service
@@ -432,7 +419,7 @@ docker-compose build [service-name]
 #### 2. Database connection issues
 
 ```bash
-# Check MongoDB health
+# Kiểm tra MongoDB health
 docker-compose exec mongodb mongosh --eval "db.adminCommand('ping')"
 
 # Restart MongoDB
@@ -442,7 +429,7 @@ docker-compose restart mongodb
 #### 3. Kafka connection issues
 
 ```bash
-# Check Kafka health
+# Kiểm tra Kafka health
 docker-compose exec kafka kafka-topics --bootstrap-server localhost:9092 --list
 
 # Restart Kafka cluster
@@ -452,7 +439,7 @@ docker-compose restart zookeeper kafka
 #### 4. Elasticsearch connection issues
 
 ```bash
-# Check Elasticsearch health
+# Kiểm tra Elasticsearch health
 curl http://localhost:9200/_cluster/health
 
 # Restart Elasticsearch
@@ -462,11 +449,11 @@ docker-compose restart elasticsearch
 #### 5. Port conflicts
 
 ```bash
-# Check used ports
-lsof -i :3000  # or another port
+# Kiểm tra ports đang sử dụng
+lsof -i :3000  # hoặc port khác
 netstat -tlnp | grep :3000
 
-# Stop service using the port
+# Dừng service sử dụng port
 docker-compose down
 ```
 
@@ -475,10 +462,10 @@ docker-compose down
 #### 1. Docker Performance
 
 ```bash
-# Remove unused containers and images
+# Xóa unused containers và images
 docker system prune -a
 
-# Monitor resource usage
+# Monitoring resource usage
 docker stats
 ```
 
@@ -491,10 +478,10 @@ docker-compose exec mongodb mongostat
 
 ### Development Tips
 
-1. **Hot reload:** Use `npm run dev` for auto-restart on changes
-2. **Debug:** Use VS Code debugger with attach to container
-3. **Testing:** Run integration tests with Docker Compose
-4. **Environment:** Use `.env` files for each service
+1. **Hot reload**: Sử dụng `npm run dev` để auto-restart khi có thay đổi
+2. **Debug**: Sử dụng VS Code debugger với attach to container
+3. **Testing**: Chạy integration tests với Docker Compose
+4. **Environment**: Sử dụng `.env` files cho từng service
 
 ## 📝 License
 
