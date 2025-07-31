@@ -25,7 +25,17 @@ export class ProductRepository {
         return await productModel
             .find()
             .limit(limit)
-            .skip((page - 1) * limit)
+            .skip(page * limit)
             .lean();
+    }
+
+    async findProductsByShopId(limit: number, page: number, query: any): Promise<IProduct[]> {
+        return await productModel
+            .find(query)
+            .sort({ updateAt: -1 })
+            .skip(page * limit)
+            .limit(limit)
+            .lean()
+            .exec();
     }
 }

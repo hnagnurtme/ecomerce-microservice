@@ -62,4 +62,22 @@ export class ProductController {
             next(error);
         }
     }
+
+    async getProductsByShopId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const query = req.query;
+        const { page, limit, shopId } = query;
+        const limitStr =
+            typeof limit === 'string' ? limit : Array.isArray(limit) ? limit[0] : undefined;
+        const pageStr = typeof page === 'string' ? page : Array.isArray(page) ? page[0] : undefined;
+
+        const shopIdStr =
+            typeof shopId === 'string' ? shopId : Array.isArray(shopId) ? shopId[0] : undefined;
+
+        const products = await this.productService.getProductsByShopId(
+            limitStr !== undefined ? String(limitStr) : '10',
+            pageStr !== undefined ? String(pageStr) : '1',
+            shopIdStr !== undefined ? String(shopIdStr) : '',
+        );
+        SuccessResponse.OK(products).send(res);
+    }
 }

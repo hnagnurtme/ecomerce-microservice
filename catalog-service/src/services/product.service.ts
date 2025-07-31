@@ -95,6 +95,7 @@ export class Furniture extends Product {
 
 export class ProductServiceFactory {
     private static productRegistry: Partial<Record<ProductType, any>> = {};
+    protected readonly repo: ProductRepository;
 
     static registerProductType(type: ProductType, classRef: any) {
         ProductServiceFactory.productRegistry[type] = classRef;
@@ -102,6 +103,7 @@ export class ProductServiceFactory {
 
     constructor() {
         logger.info('ProductServiceFactory instance created');
+        this.repo = new ProductRepository();
     }
 
     async createProduct(productData: CreateProductDto): Promise<Partial<IProduct>> {
@@ -133,7 +135,7 @@ export class ProductServiceFactory {
     }
 
     async getProductById(productId: string): Promise<IProduct | null> {
-        const product = await new ProductRepository().findProductById(productId);
+        const product = await this.repo.findProductById(productId);
         if (!product) {
             throw ErrorResponse.NOTFOUND('Product not found');
         }
@@ -143,10 +145,22 @@ export class ProductServiceFactory {
     async getAllProducts(limit: string, page: string): Promise<IProduct[]> {
         const parsedLimit = parseInt(limit, 10) || 10;
         const parsedPage = parseInt(page, 10) || 1;
-        const products = await new ProductRepository().findAllProducts(parsedLimit, parsedPage);
+        const products = await await this.repo.findAllProducts(parsedLimit, parsedPage);
         if (!products || products.length === 0) {
             throw ErrorResponse.NOTFOUND('No products found');
         }
+        return products;
+    }
+
+    async getProductsByShopId(
+        limit: string,
+        page: string,
+        shopId: string,
+    ): Promise<IProduct[] | null> {
+        const parsedLimit = parseInt(limit, 10) || 10;
+        const parsedPage = parseInt(page, 10) || 1;
+        const query = { productShop: shopId, isPublished: true };
+        const products = await this.repo.findProductsByShopId(parsedLimit, parsedPage, query);
         return products;
     }
 }

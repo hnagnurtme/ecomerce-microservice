@@ -14,6 +14,6 @@ productRouter.post(
 
 productRouter.get('/:id', asyncHandler(productController.getProductById.bind(productController)));
 
-productRouter.get('', asyncHandler(productController.getAllProducts.bind(productController)));
+productRouter.get('', asyncHandler(productController.getProductsByShopId.bind(productController)));
 
 export default productRouter;

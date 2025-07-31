@@ -9,13 +9,16 @@ import { errorHandler, notFound } from 'middleware/errorHandler';
 import { requestLogger } from 'middleware/loggerHandler';
 import appConfig from 'config/app.config';
 import { authenciation } from 'middleware/authenciation';
-
+import { setupSwagger } from 'middleware/swagger.config';
 const ROUTER_PREFIX = appConfig.app.prefix || '/api/v1';
 
 const app = express();
 // INIT MIDDLEWARE
 app.use(morgan('dev'));
 app.use(helmet());
+// INIT SWAGGER
+
+setupSwagger(app);
 // INIT LOGGER
 app.use(requestLogger);
 

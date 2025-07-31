@@ -17,7 +17,8 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+// INIT SWAGGER
+// import { setupSwagger } from 'config/swagger.config'; // Removed because 'setupSwagger' is not exported
 // INIT DATABASE
 initDatabase.connect();
 initKafka()
