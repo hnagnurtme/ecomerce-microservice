@@ -1,7 +1,17 @@
-# E-commerce Microservice Architecture
+# 🛒 E-Commerce Microservice Platform
 
-Hệ thống microservice cho ứng dụng thương mại điện tử được xây dựng với Node.js, TypeScript và các
-công nghệ hiện đại bao gồm Kafka, MongoDB, và Elasticsearch.
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
+[![Kafka](https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Elasticsearch](https://img.shields.io/badge/Elasticsearch-005571?style=flat-square&logo=elasticsearch&logoColor=white)](https://www.elastic.co/elasticsearch)
+[![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)](https://redis.io/)
+[![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
+[![CI/CD](https://img.shields.io/badge/CI/CD-blue?style=flat-square)]()
+
+> **E-commerce platform built with ExpressJS (TypeScript) microservices**  
+> Features: Kafka, Elasticsearch, Redis, MongoDB, CI/CD pipelines, AWS deployment.
 
 ## 📋 Mục lục
 
